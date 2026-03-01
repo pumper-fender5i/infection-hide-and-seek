@@ -139,7 +139,7 @@ canvas { display: block; }
 }
 
 #camera-toggle {
-  position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
+  position: fixed; top: 60px; left: 15px;
   z-index: 55; pointer-events: auto;
   background: rgba(0, 0, 0, 0.5); border: 2px solid rgba(255, 204, 0, 0.5);
   color: #ffcc00; font-size: 14px; font-weight: bold;
@@ -149,7 +149,7 @@ canvas { display: block; }
 }
 #camera-toggle:hover {
   background: rgba(255, 204, 0, 0.2); border-color: #ffcc00;
-  transform: translateX(-50%) scale(1.05);
+  transform: scale(1.05);
 }
 #camera-toggle .key-hint {
   color: rgba(255,255,255,0.5); font-size: 11px; margin-left: 6px;
@@ -199,6 +199,43 @@ canvas { display: block; }
 #mp-status { color: #ccc; font-size: 16px; margin: 10px 0; }
 #mp-back { color: #888; cursor: pointer; margin-top: 20px; font-size: 14px; }
 #mp-back:hover { color: #ffcc00; }
+
+/* ===== TOUCH / IPAD CONTROLS ===== */
+#touch-controls { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 60; pointer-events: none; }
+#touch-joystick-zone {
+  position: absolute; bottom: 20px; left: 20px; width: 150px; height: 150px;
+  pointer-events: auto; touch-action: none;
+}
+#touch-joystick-base {
+  width: 150px; height: 150px; border-radius: 50%;
+  background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.25);
+  position: relative;
+}
+#touch-joystick-knob {
+  width: 60px; height: 60px; border-radius: 50%;
+  background: rgba(255,204,0,0.5); border: 2px solid rgba(255,204,0,0.8);
+  position: absolute; top: 45px; left: 45px;
+  transition: none;
+}
+#touch-look-zone {
+  position: absolute; top: 0; right: 0; width: 60%; height: 100%;
+  pointer-events: auto; touch-action: none;
+}
+.touch-btn {
+  position: absolute; pointer-events: auto; touch-action: none;
+  width: 65px; height: 65px; border-radius: 50%;
+  background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.3);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 11px; font-weight: bold; text-align: center;
+  user-select: none; -webkit-user-select: none;
+}
+.touch-btn:active, .touch-btn.active { background: rgba(255,204,0,0.3); border-color: #ffcc00; }
+#touch-btn-throw { bottom: 30px; right: 30px; width: 80px; height: 80px; font-size: 13px; background: rgba(255,102,0,0.2); border-color: rgba(255,102,0,0.5); }
+#touch-btn-throw:active, #touch-btn-throw.active { background: rgba(255,102,0,0.5); }
+#touch-btn-crouch { bottom: 30px; right: 130px; }
+#touch-btn-trade { bottom: 120px; right: 30px; }
+#touch-btn-pause { top: 15px; right: 15px; width: 50px; height: 50px; font-size: 18px; }
+#touch-btn-camera { bottom: 120px; right: 115px; width: 55px; height: 55px; font-size: 10px; }
 </style>
 </head>
 <body>
@@ -207,7 +244,11 @@ canvas { display: block; }
   <div class="msg">
     <h1>BEAST'S LAIR</h1>
     <p>Hide & Seek</p>
-    <p style="font-size:16px; margin-top:20px;">Click to Start</p>
+    <div id="launch-buttons" style="margin-top:25px;">
+      <button class="mp-btn" onclick="event.stopPropagation(); startSoloGame();" style="display:block; margin:12px auto; min-width:220px;">Play Solo</button>
+      <button class="mp-btn-secondary" onclick="event.stopPropagation(); showMPMenu();" style="display:block; margin:12px auto; min-width:220px;">Multiplayer</button>
+    </div>
+    <p id="blocker-resume-text" style="font-size:16px; margin-top:20px; display:none;">Click to Resume</p>
   </div>
 </div>
 
@@ -257,7 +298,7 @@ canvas { display: block; }
 <div id="player-count"></div>
 <div id="crosshair"></div>
 <div id="charge-bar-container"><div id="charge-bar"></div></div>
-<div id="controls-help">WASD - Move | Shift - Crouch | Mouse - Look | R - Throw Basketball | U - Trade | V - Toggle Camera | 0 - Pause</div>
+<div id="controls-help">WASD - Move | Shift - Crouch | Mouse - Look | Left Click - Throw Basketball | U - Trade | V - Toggle Camera | 0 - Pause</div>
 <button id="camera-toggle">1st Person <span class="key-hint">[V]</span></button>
 
 <div id="funeral-overlay"><div id="funeral-text">FOUND!</div></div>
@@ -276,6 +317,18 @@ canvas { display: block; }
 
 <div id="minimap"><canvas id="minimap-canvas" width="150" height="150"></canvas></div>
 <div id="enter-overlay"><div id="enter-text"></div></div>
+
+<div id="touch-controls">
+  <div id="touch-joystick-zone">
+    <div id="touch-joystick-base"><div id="touch-joystick-knob"></div></div>
+  </div>
+  <div id="touch-look-zone"></div>
+  <div id="touch-btn-throw" class="touch-btn">THROW</div>
+  <div id="touch-btn-crouch" class="touch-btn">CROUCH</div>
+  <div id="touch-btn-trade" class="touch-btn">TRADE</div>
+  <div id="touch-btn-camera" class="touch-btn">CAM</div>
+  <div id="touch-btn-pause" class="touch-btn">| |</div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/peerjs@1.4.7/dist/peerjs.min.js"></script>
@@ -736,6 +789,7 @@ function init() {
 
   showSkinSelect();
   setupControls();
+  setupTouchControls();
   animate();
 }
 
@@ -3073,16 +3127,7 @@ function setupControls() {
     if (key in keys) keys[key] = true;
     if (e.key in keys) keys[e.key] = true;
 
-    if (key === 'r' && gameState === 'seeking' && player.isSeeker && !ballFlying && ballCooldownTimer <= 0) {
-      chargingThrow = true;
-      chargeTime = 0;
-      document.getElementById('charge-bar-container').style.display = 'block';
-    }
-
-    if (key === 'r' && ballFlying) {
-      // Recall ball
-      recallBall();
-    }
+    // R key no longer does anything for basketball (use left click instead)
 
     if (key === 'u' && (gameState === 'seeking' || gameState === 'hiding') && !player.isSeeker) {
       tradeMenuOpen = !tradeMenuOpen;
@@ -3109,9 +3154,9 @@ function setupControls() {
       if (!gamePaused) {
         gamePaused = true;
         document.exitPointerLock();
+        showBlockerAsPause('Press 0 or click to resume');
         document.getElementById('blocker').style.display = 'flex';
         document.querySelector('#blocker .msg h1').textContent = 'PAUSED';
-        document.querySelector('#blocker .msg p').textContent = 'Press 0 or click to resume';
       } else {
         gamePaused = false;
         renderer.domElement.requestPointerLock();
@@ -3130,11 +3175,7 @@ function setupControls() {
       isCrouching = false;
     }
 
-    if (key === 'r' && chargingThrow && player.isSeeker) {
-      throwBasketball();
-      chargingThrow = false;
-      document.getElementById('charge-bar-container').style.display = 'none';
-    }
+    // R key no longer used for basketball (left click instead)
   });
 
   document.addEventListener('mousemove', (e) => {
@@ -3144,21 +3185,46 @@ function setupControls() {
     pitch = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, pitch));
   });
 
-  document.addEventListener('pointerlockchange', () => {
-    isLocked = document.pointerLockElement === renderer.domElement;
-    if (!isLocked && gameState !== 'menu' && gameState !== 'ended' && gameState !== 'entering' && !tradeMenuOpen) {
-      document.getElementById('blocker').style.display = 'flex';
-      document.querySelector('#blocker .msg h1').textContent = 'PAUSED';
-      document.querySelector('#blocker .msg p').textContent = 'Click to resume';
+  // Left click to charge/throw basketball (or recall if flying)
+  document.addEventListener('mousedown', (e) => {
+    if (e.button !== 0 || !isLocked) return; // left click only, only when pointer locked
+    if (gameState === 'seeking' && player.isSeeker) {
+      if (ballFlying) {
+        recallBall();
+      } else if (ballCooldownTimer <= 0) {
+        chargingThrow = true;
+        chargeTime = 0;
+        document.getElementById('charge-bar-container').style.display = 'block';
+      }
     }
   });
 
-  document.getElementById('blocker').onclick = () => {
+  document.addEventListener('mouseup', (e) => {
+    if (e.button !== 0) return;
+    if (chargingThrow && player.isSeeker) {
+      throwBasketball();
+      chargingThrow = false;
+      document.getElementById('charge-bar-container').style.display = 'none';
+    }
+  });
+
+  document.addEventListener('pointerlockchange', () => {
+    if (isTouchDevice) return; // Touch devices don't use pointer lock
+    isLocked = document.pointerLockElement === renderer.domElement;
+    if (!isLocked && gameState !== 'menu' && gameState !== 'ended' && gameState !== 'entering' && !tradeMenuOpen) {
+      showBlockerAsPause('Click to resume');
+      document.getElementById('blocker').style.display = 'flex';
+      document.querySelector('#blocker .msg h1').textContent = 'PAUSED';
+    }
+  });
+
+  document.getElementById('blocker').onclick = (e) => {
     if (gameState === 'menu') {
-      showMPMenu();
+      // Buttons handle their own actions, don't do anything on background click
+      return;
     } else {
       gamePaused = false;
-      renderer.domElement.requestPointerLock();
+      if (!isTouchDevice) renderer.domElement.requestPointerLock();
       document.getElementById('blocker').style.display = 'none';
     }
   };
@@ -3180,6 +3246,187 @@ function setupControls() {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
+}
+
+// ================ TOUCH / IPAD CONTROLS ================
+let isTouchDevice = false;
+let touchJoystickActive = false;
+let touchJoystickX = 0, touchJoystickY = 0;
+let touchLookId = null;
+let touchLookLastX = 0, touchLookLastY = 0;
+
+function setupTouchControls() {
+  isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  if (!isTouchDevice) return;
+
+  const touchUI = document.getElementById('touch-controls');
+  touchUI.style.display = 'block';
+  // Hide desktop-only elements
+  document.getElementById('controls-help').style.display = 'none';
+  document.getElementById('crosshair').style.display = 'none';
+  document.getElementById('camera-toggle').style.display = 'none';
+
+  // On touch devices, skip pointer lock entirely
+  isLocked = true; // pretend we're locked so movement works
+
+  // JOYSTICK
+  const joystickZone = document.getElementById('touch-joystick-zone');
+  const knob = document.getElementById('touch-joystick-knob');
+  let joystickTouchId = null;
+  const jCenter = 75; // center of 150px zone
+  const jMax = 50; // max knob travel
+
+  joystickZone.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const t = e.changedTouches[0];
+    joystickTouchId = t.identifier;
+    touchJoystickActive = true;
+  }, { passive: false });
+
+  joystickZone.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    for (let t of e.changedTouches) {
+      if (t.identifier === joystickTouchId) {
+        const rect = joystickZone.getBoundingClientRect();
+        let dx = (t.clientX - rect.left) - jCenter;
+        let dy = (t.clientY - rect.top) - jCenter;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist > jMax) { dx = dx/dist*jMax; dy = dy/dist*jMax; }
+        knob.style.left = (jCenter + dx - 30) + 'px';
+        knob.style.top = (jCenter + dy - 30) + 'px';
+        touchJoystickX = dx / jMax; // -1 to 1
+        touchJoystickY = dy / jMax; // -1 to 1
+      }
+    }
+  }, { passive: false });
+
+  const resetJoystick = (e) => {
+    for (let t of e.changedTouches) {
+      if (t.identifier === joystickTouchId) {
+        joystickTouchId = null;
+        touchJoystickActive = false;
+        touchJoystickX = 0; touchJoystickY = 0;
+        knob.style.left = '45px'; knob.style.top = '45px';
+      }
+    }
+  };
+  joystickZone.addEventListener('touchend', resetJoystick, { passive: false });
+  joystickZone.addEventListener('touchcancel', resetJoystick, { passive: false });
+
+  // LOOK ZONE (right side of screen)
+  const lookZone = document.getElementById('touch-look-zone');
+  lookZone.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (touchLookId === null) {
+      const t = e.changedTouches[0];
+      touchLookId = t.identifier;
+      touchLookLastX = t.clientX;
+      touchLookLastY = t.clientY;
+    }
+  }, { passive: false });
+
+  lookZone.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    for (let t of e.changedTouches) {
+      if (t.identifier === touchLookId) {
+        const dx = t.clientX - touchLookLastX;
+        const dy = t.clientY - touchLookLastY;
+        yaw -= dx * 0.004;
+        pitch -= dy * 0.004;
+        pitch = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, pitch));
+        touchLookLastX = t.clientX;
+        touchLookLastY = t.clientY;
+      }
+    }
+  }, { passive: false });
+
+  const resetLook = (e) => {
+    for (let t of e.changedTouches) {
+      if (t.identifier === touchLookId) { touchLookId = null; }
+    }
+  };
+  lookZone.addEventListener('touchend', resetLook, { passive: false });
+  lookZone.addEventListener('touchcancel', resetLook, { passive: false });
+
+  // THROW BUTTON
+  const throwBtn = document.getElementById('touch-btn-throw');
+  throwBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (gameState === 'seeking' && player.isSeeker) {
+      if (ballFlying) {
+        recallBall();
+      } else if (ballCooldownTimer <= 0) {
+        chargingThrow = true;
+        chargeTime = 0;
+        document.getElementById('charge-bar-container').style.display = 'block';
+        throwBtn.classList.add('active');
+      }
+    }
+  }, { passive: false });
+
+  throwBtn.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    if (chargingThrow && player.isSeeker) {
+      throwBasketball();
+      chargingThrow = false;
+      document.getElementById('charge-bar-container').style.display = 'none';
+    }
+    throwBtn.classList.remove('active');
+  }, { passive: false });
+
+  // CROUCH BUTTON
+  const crouchBtn = document.getElementById('touch-btn-crouch');
+  crouchBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    isCrouching = true;
+    crouchBtn.classList.add('active');
+  }, { passive: false });
+  crouchBtn.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    isCrouching = false;
+    crouchBtn.classList.remove('active');
+  }, { passive: false });
+
+  // TRADE BUTTON
+  const tradeBtn = document.getElementById('touch-btn-trade');
+  tradeBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if ((gameState === 'seeking' || gameState === 'hiding') && !player.isSeeker) {
+      tradeMenuOpen = !tradeMenuOpen;
+      document.getElementById('trade-menu').style.display = tradeMenuOpen ? 'block' : 'none';
+      if (tradeMenuOpen) populateTradeMenu();
+    }
+  }, { passive: false });
+
+  // CAMERA TOGGLE
+  const camBtn = document.getElementById('touch-btn-camera');
+  camBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (gameState === 'hiding' || gameState === 'seeking') toggleCameraMode();
+  }, { passive: false });
+
+  // PAUSE BUTTON
+  const pauseBtn = document.getElementById('touch-btn-pause');
+  pauseBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (gameState === 'hiding' || gameState === 'seeking') {
+      if (!gamePaused) {
+        gamePaused = true;
+        document.getElementById('blocker').style.display = 'flex';
+        document.querySelector('#blocker .msg h1').textContent = 'PAUSED';
+        document.querySelector('#blocker .msg p').textContent = 'Tap to resume';
+      }
+    }
+  }, { passive: false });
+}
+
+// Apply touch joystick input to movement keys (called in animate loop)
+function applyTouchInput() {
+  if (!isTouchDevice) return;
+  keys.w = touchJoystickY < -0.3;
+  keys.s = touchJoystickY > 0.3;
+  keys.a = touchJoystickX < -0.3;
+  keys.d = touchJoystickX > 0.3;
 }
 
 function toggleCameraMode() {
@@ -3260,6 +3507,19 @@ function generateRoomCode() {
   let code = '';
   for (let i = 0; i < 4; i++) code += chars[Math.floor(Math.random() * chars.length)];
   return code;
+}
+
+function showBlockerAsMenu() {
+  document.getElementById('launch-buttons').style.display = 'block';
+  document.getElementById('blocker-resume-text').style.display = 'none';
+  document.querySelector('#blocker .msg h1').textContent = "BEAST'S LAIR";
+  document.querySelector('#blocker .msg p').textContent = 'Hide & Seek';
+}
+
+function showBlockerAsPause(text) {
+  document.getElementById('launch-buttons').style.display = 'none';
+  document.getElementById('blocker-resume-text').style.display = 'block';
+  document.getElementById('blocker-resume-text').textContent = text || 'Click to Resume';
 }
 
 function showMPMenu() {
@@ -4051,6 +4311,9 @@ function animate() {
     const hidersLeft = players.filter(p => !p.isSeeker).length + (player.isSeeker ? 0 : 1);
     const seekersCount = players.filter(p => p.isSeeker).length + (player.isSeeker ? 1 : 0);
     document.getElementById('player-count').textContent = `Hiders: ${hidersLeft} | Seekers: ${seekersCount}`;
+
+    // Apply touch joystick input (iPad/mobile)
+    applyTouchInput();
 
     // Player movement
     if (isLocked && !tradeMenuOpen) {
