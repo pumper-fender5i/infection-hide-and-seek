@@ -120,12 +120,7 @@ canvas { display: block; }
 .trade-btn { padding: 5px 15px; background: #ffcc00; color: #000; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
 #trade-close { margin-top: 15px; padding: 8px 30px; background: #444; color: #fff; border: none; border-radius: 8px; cursor: pointer; display: block; margin-left: auto; margin-right: auto; }
 
-#minimap {
-  position: fixed; bottom: 15px; right: 15px; width: 150px; height: 150px;
-  background: rgba(0, 0, 0, 0.5); border: 2px solid rgba(255,255,255,0.3);
-  border-radius: 50%; z-index: 50; overflow: hidden;
-}
-#minimap-canvas { width: 100%; height: 100%; border-radius: 50%; }
+/* minimap removed */
 
 #enter-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -203,39 +198,39 @@ canvas { display: block; }
 /* ===== TOUCH / IPAD CONTROLS ===== */
 #touch-controls { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 60; pointer-events: none; }
 #touch-joystick-zone {
-  position: absolute; bottom: 20px; left: 20px; width: 150px; height: 150px;
+  position: absolute; bottom: 30px; left: 25px; width: 180px; height: 180px;
   pointer-events: auto; touch-action: none;
 }
 #touch-joystick-base {
-  width: 150px; height: 150px; border-radius: 50%;
-  background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.25);
+  width: 180px; height: 180px; border-radius: 50%;
+  background: rgba(30,100,220,0.15); border: 3px solid rgba(50,130,255,0.4);
   position: relative;
 }
 #touch-joystick-knob {
-  width: 60px; height: 60px; border-radius: 50%;
-  background: rgba(255,204,0,0.5); border: 2px solid rgba(255,204,0,0.8);
-  position: absolute; top: 45px; left: 45px;
+  width: 75px; height: 75px; border-radius: 50%;
+  background: rgba(50,130,255,0.5); border: 3px solid rgba(80,160,255,0.8);
+  position: absolute; top: 52.5px; left: 52.5px;
   transition: none;
 }
 #touch-look-zone {
-  position: absolute; top: 0; right: 0; width: 60%; height: 100%;
+  position: absolute; top: 0; right: 0; width: 55%; height: 100%;
   pointer-events: auto; touch-action: none;
 }
 .touch-btn {
   position: absolute; pointer-events: auto; touch-action: none;
-  width: 65px; height: 65px; border-radius: 50%;
-  background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.3);
+  width: 85px; height: 85px; border-radius: 50%;
+  background: rgba(30,100,220,0.2); border: 3px solid rgba(50,130,255,0.45);
   display: flex; align-items: center; justify-content: center;
-  color: #fff; font-size: 11px; font-weight: bold; text-align: center;
+  color: #fff; font-size: 14px; font-weight: bold; text-align: center;
   user-select: none; -webkit-user-select: none;
 }
-.touch-btn:active, .touch-btn.active { background: rgba(255,204,0,0.3); border-color: #ffcc00; }
-#touch-btn-throw { bottom: 30px; right: 30px; width: 80px; height: 80px; font-size: 13px; background: rgba(255,102,0,0.2); border-color: rgba(255,102,0,0.5); }
-#touch-btn-throw:active, #touch-btn-throw.active { background: rgba(255,102,0,0.5); }
-#touch-btn-crouch { bottom: 30px; right: 130px; }
-#touch-btn-trade { bottom: 120px; right: 30px; }
-#touch-btn-pause { top: 15px; right: 15px; width: 50px; height: 50px; font-size: 18px; }
-#touch-btn-camera { bottom: 120px; right: 115px; width: 55px; height: 55px; font-size: 10px; }
+.touch-btn:active, .touch-btn.active { background: rgba(50,130,255,0.5); border-color: #5599ff; }
+#touch-btn-throw { bottom: 35px; right: 35px; width: 100px; height: 100px; font-size: 16px; background: rgba(30,100,220,0.25); border-color: rgba(50,130,255,0.6); }
+#touch-btn-throw:active, #touch-btn-throw.active { background: rgba(50,130,255,0.6); }
+#touch-btn-crouch { bottom: 35px; right: 155px; }
+#touch-btn-trade { bottom: 150px; right: 35px; }
+#touch-btn-pause { top: 20px; right: 20px; width: 65px; height: 65px; font-size: 22px; }
+#touch-btn-camera { bottom: 150px; right: 140px; width: 75px; height: 75px; font-size: 13px; }
 </style>
 </head>
 <body>
@@ -315,7 +310,6 @@ canvas { display: block; }
   <button id="trade-close">Close (U)</button>
 </div>
 
-<div id="minimap"><canvas id="minimap-canvas" width="150" height="150"></canvas></div>
 <div id="enter-overlay"><div id="enter-text"></div></div>
 
 <div id="touch-controls">
@@ -787,7 +781,7 @@ function init() {
   // Camera setup
   camera.position.set(0, 1.5, 0);
 
-  showSkinSelect();
+  // Don't show skin select yet — wait for user to click Play Solo or Multiplayer on the launch screen
   setupControls();
   setupTouchControls();
   animate();
@@ -3273,8 +3267,8 @@ function setupTouchControls() {
   const joystickZone = document.getElementById('touch-joystick-zone');
   const knob = document.getElementById('touch-joystick-knob');
   let joystickTouchId = null;
-  const jCenter = 75; // center of 150px zone
-  const jMax = 50; // max knob travel
+  const jCenter = 90; // center of 180px zone
+  const jMax = 55; // max knob travel
 
   joystickZone.addEventListener('touchstart', (e) => {
     e.preventDefault();
@@ -3292,8 +3286,8 @@ function setupTouchControls() {
         let dy = (t.clientY - rect.top) - jCenter;
         const dist = Math.sqrt(dx*dx + dy*dy);
         if (dist > jMax) { dx = dx/dist*jMax; dy = dy/dist*jMax; }
-        knob.style.left = (jCenter + dx - 30) + 'px';
-        knob.style.top = (jCenter + dy - 30) + 'px';
+        knob.style.left = (jCenter + dx - 37.5) + 'px';
+        knob.style.top = (jCenter + dy - 37.5) + 'px';
         touchJoystickX = dx / jMax; // -1 to 1
         touchJoystickY = dy / jMax; // -1 to 1
       }
@@ -3306,7 +3300,7 @@ function setupTouchControls() {
         joystickTouchId = null;
         touchJoystickActive = false;
         touchJoystickX = 0; touchJoystickY = 0;
-        knob.style.left = '45px'; knob.style.top = '45px';
+        knob.style.left = '52.5px'; knob.style.top = '52.5px';
       }
     }
   };
@@ -3552,6 +3546,7 @@ function showJoinRoom() {
 function startSoloGame() {
   multiplayerMode = false;
   document.getElementById('mp-menu').style.display = 'none';
+  document.getElementById('blocker').style.display = 'none';
   showSkinSelect();
 }
 
@@ -4210,57 +4205,7 @@ function moveToward(entity, target, speed, dt) {
   }
 }
 
-// ==================== MINIMAP ====================
-function updateMinimap() {
-  const canvas = document.getElementById('minimap-canvas');
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, 150, 150);
-
-  // Background
-  ctx.fillStyle = 'rgba(20, 40, 20, 0.8)';
-  ctx.beginPath();
-  ctx.arc(75, 75, 72, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Border
-  ctx.strokeStyle = 'rgba(0, 255, 170, 0.5)';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.arc(75, 75, 72, 0, Math.PI * 2);
-  ctx.stroke();
-
-  const scale = 70 / CONFIG.MAP_RADIUS;
-
-  // Player dot
-  const px = 75 + player.position.x * scale;
-  const py = 75 + player.position.z * scale;
-  ctx.fillStyle = player.isSeeker ? '#ff4400' : '#00ff88';
-  ctx.beginPath();
-  ctx.arc(px, py, 4, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Direction indicator (matches forward: -sin(yaw), -cos(yaw))
-  const dirX = px + (-Math.sin(yaw)) * 8;
-  const dirY = py + (-Math.cos(yaw)) * 8;
-  ctx.strokeStyle = '#00ff88';
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.moveTo(px, py);
-  ctx.lineTo(dirX, dirY);
-  ctx.stroke();
-
-  // AI dots (only show seekers, hiders are hidden on minimap unless you're a seeker)
-  players.forEach(p => {
-    if (p.isSeeker || player.isSeeker) {
-      const ax = 75 + p.position.x * scale;
-      const ay = 75 + p.position.z * scale;
-      ctx.fillStyle = p.isSeeker ? '#ff4400' : '#ffcc00';
-      ctx.beginPath();
-      ctx.arc(ax, ay, 3, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  });
-}
+// Minimap removed
 
 // ==================== MAIN LOOP ====================
 function animate() {
@@ -4591,7 +4536,6 @@ function animate() {
       });
     }
 
-    updateMinimap();
   }
 
   renderer.render(scene, camera);
