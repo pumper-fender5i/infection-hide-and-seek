@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🇫🇷 Bon Voyage! — French Travel Phrases</title>
+<style>
+  :root{
+    --bleu:#0055A4;      /* French flag blue */
+    --blanc:#ffffff;
+    --rouge:#EF4135;     /* French flag red */
+    --ink:#1c2237;
+    --soft:#f4f6ff;
+    --gold:#ffce3a;
+    --mint:#37d9a0;
+    --pink:#ff6fb5;
+    --violet:#8a6bff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 600px at 10% -10%, #cfe0ff 0%, transparent 55%),
+      radial-gradient(1000px 500px at 110% 0%, #ffd9e6 0%, transparent 50%),
+      linear-gradient(135deg,#eef2ff 0%,#fef6f8 100%);
+    min-height:100%;
+    padding:18px;
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    text-align:center;
+    margin:6px auto 18px;
+    max-width:1200px;
+  }
+  .title{
+    font-size:clamp(30px,5vw,52px);
+    font-weight:900;
+    letter-spacing:.5px;
+    line-height:1.05;
+    background:linear-gradient(90deg,var(--bleu),var(--violet) 40%,var(--rouge));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 2px 0 rgba(255,255,255,.6);
+    animation:pop .8s ease;
+  }
+  @keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+  .subtitle{margin-top:8px;font-size:clamp(14px,2.4vw,18px);color:#5a6076;font-weight:600}
+  .flag-strip{display:inline-flex;border-radius:6px;overflow:hidden;margin-left:8px;box-shadow:0 2px 6px rgba(0,0,0,.15);vertical-align:middle}
+  .flag-strip span{width:14px;height:20px;display:inline-block}
+  .voice-note{margin-top:10px;font-size:13px;color:#8089a3}
+
+  /* ---------- Layout ---------- */
+  .wrap{
+    max-width:1200px;margin:0 auto;
+    display:grid;grid-template-columns:1fr 1fr;gap:22px;
+    align-items:start;
+  }
+  @media (max-width:880px){.wrap{grid-template-columns:1fr}}
+
+  .panel{
+    background:rgba(255,255,255,.82);
+    backdrop-filter:blur(6px);
+    border:1px solid rgba(255,255,255,.7);
+    border-radius:22px;
+    box-shadow:0 18px 40px rgba(40,53,120,.14);
+    padding:18px;
+  }
+  .panel h2{
+    font-size:20px;font-weight:900;margin-bottom:6px;display:flex;align-items:center;gap:8px;
+  }
+  .panel .hint{font-size:13px;color:#8089a3;margin-bottom:14px}
+
+  /* ---------- Category chips ---------- */
+  .cats{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .chip{
+    border:none;cursor:pointer;border-radius:999px;
+    padding:8px 14px;font-size:13.5px;font-weight:800;color:#fff;
+    box-shadow:0 4px 10px rgba(0,0,0,.12);
+    transition:transform .12s ease,box-shadow .12s ease,filter .12s ease;
+    display:flex;align-items:center;gap:6px;
+  }
+  .chip:hover{transform:translateY(-2px)}
+  .chip:active{transform:translateY(0)}
+  .chip.active{outline:3px solid rgba(28,34,55,.18);filter:saturate(1.25) brightness(1.03)}
+  .chip[data-c="0"]{background:linear-gradient(135deg,#0055A4,#3b82f6)}
+  .chip[data-c="1"]{background:linear-gradient(135deg,#EF4135,#ff7a5c)}
+  .chip[data-c="2"]{background:linear-gradient(135deg,#37d9a0,#11b08a)}
+  .chip[data-c="3"]{background:linear-gradient(135deg,#8a6bff,#b07bff)}
+  .chip[data-c="4"]{background:linear-gradient(135deg,#ff6fb5,#ff9a6b)}
+  .chip[data-c="5"]{background:linear-gradient(135deg,#f59e0b,#ffce3a)}
+  .chip[data-c="6"]{background:linear-gradient(135deg,#0ea5e9,#22d3ee)}
+  .chip[data-c="7"]{background:linear-gradient(135deg,#64748b,#94a3b8)}
+
+  /* ---------- Phrase list ---------- */
+  .search{
+    width:100%;border:2px solid #e6e9f5;border-radius:14px;
+    padding:11px 14px;font-size:15px;margin-bottom:12px;outline:none;
+    transition:border-color .15s ease, box-shadow .15s ease;background:#fff;
+  }
+  .search:focus{border-color:var(--violet);box-shadow:0 0 0 4px rgba(138,107,255,.15)}
+  .list{max-height:560px;overflow:auto;padding-right:6px}
+  .list::-webkit-scrollbar{width:10px}
+  .list::-webkit-scrollbar-thumb{background:#d7ddf3;border-radius:10px}
+  .row{
+    display:flex;align-items:center;gap:10px;
+    background:#fff;border:1px solid #eef0fa;border-radius:14px;
+    padding:11px 12px;margin-bottom:9px;
+    transition:transform .1s ease,box-shadow .12s ease,border-color .12s;
+    cursor:pointer;
+  }
+  .row:hover{transform:translateX(3px);box-shadow:0 6px 16px rgba(40,53,120,.10);border-color:#dfe4fb}
+  .row .txt{flex:1;min-width:0}
+  .row .fr{font-weight:800;font-size:15.5px;color:var(--bleu)}
+  .row .en{font-size:13px;color:#6b7390;margin-top:2px}
+  .row .ipa{font-size:12.5px;color:#a36bff;font-style:italic;margin-top:2px}
+  .row .tag{font-size:10px;font-weight:800;color:#fff;padding:3px 8px;border-radius:999px;white-space:nowrap}
+  .speak{
+    flex:none;width:42px;height:42px;border-radius:12px;border:none;cursor:pointer;
+    background:linear-gradient(135deg,var(--violet),#b07bff);color:#fff;font-size:18px;
+    box-shadow:0 5px 12px rgba(138,107,255,.35);transition:transform .1s ease,filter .1s;
+  }
+  .speak:hover{filter:brightness(1.08)}
+  .speak:active{transform:scale(.9)}
+  .speak.playing{animation:pulse .7s infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(138,107,255,.5)}50%{box-shadow:0 0 0 10px rgba(138,107,255,0)}}
+
+  /* ---------- Flashcards ---------- */
+  .fc-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+  .btn{
+    border:none;cursor:pointer;border-radius:12px;padding:9px 14px;font-weight:800;font-size:13.5px;
+    background:#eef1fb;color:var(--ink);transition:transform .1s ease,filter .1s,background .1s;
+  }
+  .btn:hover{filter:brightness(1.03);transform:translateY(-1px)}
+  .btn.primary{background:linear-gradient(135deg,var(--bleu),#3b82f6);color:#fff}
+  .btn.rose{background:linear-gradient(135deg,var(--rouge),#ff7a5c);color:#fff}
+  .btn.mint{background:linear-gradient(135deg,var(--mint),#11b08a);color:#fff}
+  .spacer{flex:1}
+  .counter{font-weight:800;color:#5a6076;font-size:14px}
+
+  .card-stage{perspective:1400px;margin:6px 0 14px}
+  .card{
+    position:relative;width:100%;height:300px;cursor:pointer;
+    transform-style:preserve-3d;transition:transform .55s cubic-bezier(.2,.8,.2,1);
+  }
+  .card.flipped{transform:rotateY(180deg)}
+  .face{
+    position:absolute;inset:0;backface-visibility:hidden;border-radius:24px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+    padding:26px;box-shadow:0 22px 50px rgba(40,53,120,.22);
+  }
+  .face .label{position:absolute;top:14px;left:16px;font-size:11px;font-weight:900;letter-spacing:1px;opacity:.8}
+  .face .tag2{position:absolute;top:12px;right:14px;font-size:11px;font-weight:800;background:rgba(255,255,255,.25);padding:4px 10px;border-radius:999px}
+  .front{
+    background:linear-gradient(135deg,#0055A4,#5b8def);color:#fff;
+  }
+  .front .big{font-size:clamp(24px,4vw,34px);font-weight:900;line-height:1.2}
+  .front .ipa{margin-top:14px;font-size:16px;font-style:italic;color:#dfe9ff}
+  .back{
+    background:linear-gradient(135deg,#EF4135,#ff8a5c);color:#fff;transform:rotateY(180deg);
+  }
+  .back .small{font-size:13px;opacity:.85;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+  .back .big{font-size:clamp(22px,3.6vw,30px);font-weight:900}
+  .tap{position:absolute;bottom:14px;width:100%;left:0;text-align:center;font-size:12px;opacity:.8}
+  .speak-lg{
+    margin-top:18px;border:none;cursor:pointer;border-radius:14px;padding:11px 20px;
+    background:rgba(255,255,255,.22);color:#fff;font-weight:800;font-size:15px;
+    display:inline-flex;align-items:center;gap:8px;backdrop-filter:blur(4px);
+    transition:transform .1s ease,background .12s;
+  }
+  .speak-lg:hover{background:rgba(255,255,255,.34)}
+  .speak-lg:active{transform:scale(.95)}
+
+  .nav{display:flex;gap:10px;align-items:center}
+  .nav .btn{flex:1}
+  .progress{height:10px;background:#e7ebf8;border-radius:999px;overflow:hidden;margin-top:14px}
+  .progress > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mint),var(--bleu));transition:width .3s ease}
+  .known-note{margin-top:8px;font-size:12.5px;color:#8089a3;text-align:center}
+
+  .footer{max-width:1200px;margin:18px auto 6px;text-align:center;color:#8089a3;font-size:12.5px}
+
+  /* confetti */
+  #confetti{position:fixed;inset:0;pointer-events:none;z-index:200}
+</style>
+</head>
+<body>
+  <header>
+    <div class="title">Bon Voyage&nbsp;! ✈️ Your French Travel Companion
+      <span class="flag-strip"><span style="background:#0055A4"></span><span style="background:#fff"></span><span style="background:#EF4135"></span></span>
+    </div>
+    <div class="subtitle">Browse real travel phrases on the left → flip & learn flashcards on the right 🎴</div>
+    <div class="voice-note" id="voiceNote">🔊 Click any speaker to hear it spoken in French.</div>
+  </header>
+
+  <div class="wrap">
+    <!-- LEFT: Phrase library -->
+    <section class="panel">
+      <h2>📚 Phrase Library</h2>
+      <div class="hint">Pick a category, search, or tap a card to send it to the flashcard deck.</div>
+
+      <div class="cats" id="cats"></div>
+      <input class="search" id="search" placeholder="🔎 Search English or French…" autocomplete="off">
+      <div class="list" id="list"></div>
+    </section>
+
+    <!-- RIGHT: Flashcards -->
+    <section class="panel">
+      <h2>🎴 Flashcard Trainer</h2>
+      <div class="hint">Tap the card to flip. Hear it, learn it, mark it known!</div>
+
+      <div class="fc-toolbar">
+        <button class="btn primary" id="shuffle">🔀 Shuffle</button>
+        <button class="btn mint" id="markKnown">✅ Known</button>
+        <button class="btn rose" id="resetKnown">♻️ Reset</button>
+        <span class="spacer"></span>
+        <span class="counter" id="counter">0 / 0</span>
+      </div>
+
+      <div class="card-stage">
+        <div class="card" id="card">
+          <div class="face front">
+            <span class="label">🇫🇷 FRENCH</span>
+            <span class="tag2" id="frontTag">—</span>
+            <div class="big" id="frontFr">Bienvenue&nbsp;!</div>
+            <div class="ipa" id="frontIpa">[byeN-vuh-NUH]</div>
+            <button class="speak-lg" id="speakCard">🔊 Hear it</button>
+            <div class="tap">👆 tap card to flip</div>
+          </div>
+          <div class="face back">
+            <span class="label">🇬🇧 ENGLISH</span>
+            <div class="small">means…</div>
+            <div class="big" id="backEn">Welcome!</div>
+            <div class="tap">👆 tap card to flip back</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav">
+        <button class="btn" id="prev">⬅️ Prev</button>
+        <button class="btn primary" id="flip">🔄 Flip</button>
+        <button class="btn" id="next">Next ➡️</button>
+      </div>
+
+      <div class="progress"><i id="bar"></i></div>
+      <div class="known-note" id="knownNote">0 phrases marked as known. Keep going — tu peux le faire! 💪</div>
+    </section>
+  </div>
+
+  <div class="footer">Made for your trip ❤️ — works fully offline. Pronunciation uses your browser's built-in French voice.</div>
+  <canvas id="confetti"></canvas>
+
+<script>
+/* ============================================================
+   PHRASE DATA  — categories + travel phrases with simple
+   English-friendly pronunciation hints.
+   ============================================================ */
+const CATEGORIES = [
+  {name:"Basics & Greetings", emoji:"👋"},
+  {name:"Restaurants & Food", emoji:"🍽️"},
+  {name:"Directions & Transport", emoji:"🧭"},
+  {name:"Airport & Travel", emoji:"🛫"},
+  {name:"Shopping & Money", emoji:"🛍️"},
+  {name:"Hotel & Stay", emoji:"🏨"},
+  {name:"Emergencies & Health", emoji:"🚑"},
+  {name:"Numbers & Time", emoji:"🔢"},
+];
+
+const PHRASES = [
+  // 0 Basics & Greetings
+  {c:0, fr:"Bonjour", en:"Hello / Good morning", ipa:"bohn-ZHOOR"},
+  {c:0, fr:"Bonsoir", en:"Good evening", ipa:"bohn-SWAHR"},
+  {c:0, fr:"Salut", en:"Hi / Bye (casual)", ipa:"sah-LU"},
+  {c:0, fr:"Au revoir", en:"Goodbye", ipa:"oh ruh-VWAHR"},
+  {c:0, fr:"S'il vous plaît", en:"Please", ipa:"seel voo PLEH"},
+  {c:0, fr:"Merci beaucoup", en:"Thank you very much", ipa:"mehr-SEE boh-KOO"},
+  {c:0, fr:"De rien", en:"You're welcome", ipa:"duh ree-AN"},
+  {c:0, fr:"Oui / Non", en:"Yes / No", ipa:"wee / nohn"},
+  {c:0, fr:"Excusez-moi", en:"Excuse me", ipa:"ehk-skU-zay MWAH"},
+  {c:0, fr:"Pardon", en:"Sorry / Pardon", ipa:"par-DOHN"},
+  {c:0, fr:"Comment allez-vous ?", en:"How are you?", ipa:"koh-mawn tah-lay VOO"},
+  {c:0, fr:"Je vais bien, merci", en:"I'm fine, thank you", ipa:"zhuh vay bee-AN mehr-SEE"},
+  {c:0, fr:"Je ne comprends pas", en:"I don't understand", ipa:"zhuh nuh kohm-prawn PAH"},
+  {c:0, fr:"Parlez-vous anglais ?", en:"Do you speak English?", ipa:"par-lay voo awn-GLEH"},
+  {c:0, fr:"Pouvez-vous m'aider ?", en:"Can you help me?", ipa:"poo-vay voo meh-DAY"},
+  {c:0, fr:"Comment vous appelez-vous ?", en:"What is your name?", ipa:"koh-mawn voo zah-play VOO"},
+  {c:0, fr:"Je m'appelle…", en:"My name is…", ipa:"zhuh mah-PELL"},
+  {c:0, fr:"Enchanté(e)", en:"Nice to meet you", ipa:"awn-shawn-TAY"},
+
+  // 1 Restaurants & Food
+  {c:1, fr:"Une table pour deux, s'il vous plaît", en:"A table for two, please", ipa:"Un TAH-bluh poor DUH"},
+  {c:1, fr:"La carte, s'il vous plaît", en:"The menu, please", ipa:"lah KART"},
+  {c:1, fr:"Je voudrais…", en:"I would like…", ipa:"zhuh voo-DREH"},
+  {c:1, fr:"L'addition, s'il vous plaît", en:"The check, please", ipa:"lah-dee-see-OHN"},
+  {c:1, fr:"Un café, s'il vous plaît", en:"A coffee, please", ipa:"un kah-FAY"},
+  {c:1, fr:"De l'eau, s'il vous plaît", en:"Some water, please", ipa:"duh LOH"},
+  {c:1, fr:"Un verre de vin rouge", en:"A glass of red wine", ipa:"un VAIR duh van ROOZH"},
+  {c:1, fr:"C'est délicieux !", en:"It's delicious!", ipa:"say day-lee-see-UH"},
+  {c:1, fr:"Je suis végétarien(ne)", en:"I am vegetarian", ipa:"zhuh swee vay-zhay-tah-ree-AN"},
+  {c:1, fr:"Je suis allergique aux…", en:"I am allergic to…", ipa:"zhuh swee zah-lehr-ZHEEK oh"},
+  {c:1, fr:"Sans gluten, s'il vous plaît", en:"Gluten-free, please", ipa:"sawn glU-TEN"},
+  {c:1, fr:"Qu'est-ce que vous recommandez ?", en:"What do you recommend?", ipa:"kess kuh voo ruh-koh-mawn-DAY"},
+  {c:1, fr:"C'était très bon", en:"That was very good", ipa:"say-tay treh BOHN"},
+  {c:1, fr:"Pour emporter", en:"To take away", ipa:"poor awn-por-TAY"},
+
+  // 2 Directions & Transport
+  {c:2, fr:"Où est… ?", en:"Where is…?", ipa:"oo EH"},
+  {c:2, fr:"Où sont les toilettes ?", en:"Where is the bathroom?", ipa:"oo sohn lay twah-LET"},
+  {c:2, fr:"À gauche", en:"To the left", ipa:"ah GOHSH"},
+  {c:2, fr:"À droite", en:"To the right", ipa:"ah DRWAHT"},
+  {c:2, fr:"Tout droit", en:"Straight ahead", ipa:"too DRWAH"},
+  {c:2, fr:"C'est loin ?", en:"Is it far?", ipa:"say LWAN"},
+  {c:2, fr:"C'est près d'ici ?", en:"Is it near here?", ipa:"say preh dee-SEE"},
+  {c:2, fr:"Je suis perdu(e)", en:"I am lost", ipa:"zhuh swee pehr-DU"},
+  {c:2, fr:"Où est la gare ?", en:"Where is the train station?", ipa:"oo eh lah GAR"},
+  {c:2, fr:"Un billet pour…", en:"A ticket to…", ipa:"un bee-YAY poor"},
+  {c:2, fr:"À quelle heure part le train ?", en:"What time does the train leave?", ipa:"ah kell UR par luh TRAN"},
+  {c:2, fr:"Je voudrais un taxi", en:"I would like a taxi", ipa:"zhuh voo-dreh un tahk-SEE"},
+  {c:2, fr:"Arrêtez ici, s'il vous plaît", en:"Stop here, please", ipa:"ah-reh-tay ee-SEE"},
+  {c:2, fr:"Pouvez-vous me montrer sur la carte ?", en:"Can you show me on the map?", ipa:"poo-vay voo muh mohn-tray sUr lah KART"},
+
+  // 3 Airport & Travel
+  {c:3, fr:"Où est l'enregistrement ?", en:"Where is check-in?", ipa:"oo eh lawn-reh-zhee-struh-MAWN"},
+  {c:3, fr:"Voici mon passeport", en:"Here is my passport", ipa:"vwah-see mohn pass-POR"},
+  {c:3, fr:"Quelle est la porte d'embarquement ?", en:"What is the boarding gate?", ipa:"kell eh lah port dawn-bar-kuh-MAWN"},
+  {c:3, fr:"Mon vol est en retard", en:"My flight is delayed", ipa:"mohn vol eh tawn ruh-TAR"},
+  {c:3, fr:"J'ai une correspondance", en:"I have a connecting flight", ipa:"zhay Un koh-res-pohn-DAWNS"},
+  {c:3, fr:"Où récupérer mes bagages ?", en:"Where do I get my luggage?", ipa:"oo ray-kU-pay-ray may bah-GAHZH"},
+  {c:3, fr:"J'ai perdu mes bagages", en:"I lost my luggage", ipa:"zhay pehr-dU may bah-GAHZH"},
+  {c:3, fr:"Je n'ai rien à déclarer", en:"I have nothing to declare", ipa:"zhuh nay ree-AN ah day-klah-RAY"},
+  {c:3, fr:"Où sont les taxis ?", en:"Where are the taxis?", ipa:"oo sohn lay tahk-SEE"},
+  {c:3, fr:"Quel est le numéro de la porte ?", en:"What is the gate number?", ipa:"kell eh luh nU-may-roh duh lah PORT"},
+
+  // 4 Shopping & Money
+  {c:4, fr:"Combien ça coûte ?", en:"How much does it cost?", ipa:"kohm-bee-AN sah KOOT"},
+  {c:4, fr:"C'est trop cher", en:"It's too expensive", ipa:"say troh SHAIR"},
+  {c:4, fr:"Je regarde seulement", en:"I'm just looking", ipa:"zhuh ruh-gard suhl-MAWN"},
+  {c:4, fr:"Acceptez-vous la carte ?", en:"Do you accept cards?", ipa:"ahk-sep-tay voo lah KART"},
+  {c:4, fr:"Je voudrais payer", en:"I would like to pay", ipa:"zhuh voo-dreh pay-YAY"},
+  {c:4, fr:"Avez-vous une autre taille ?", en:"Do you have another size?", ipa:"ah-vay voo Un OH-truh tye"},
+  {c:4, fr:"Puis-je l'essayer ?", en:"Can I try it on?", ipa:"pweezh leh-say-YAY"},
+  {c:4, fr:"Où est le distributeur ?", en:"Where is the ATM?", ipa:"oo eh luh dees-tree-bU-TUR"},
+  {c:4, fr:"Un reçu, s'il vous plaît", en:"A receipt, please", ipa:"un ruh-SU"},
+
+  // 5 Hotel & Stay
+  {c:5, fr:"J'ai une réservation", en:"I have a reservation", ipa:"zhay Un ray-zehr-vah-see-OHN"},
+  {c:5, fr:"Une chambre pour une nuit", en:"A room for one night", ipa:"Un SHAWM-bruh poor Un NWEE"},
+  {c:5, fr:"À quelle heure est le petit-déjeuner ?", en:"What time is breakfast?", ipa:"ah kell ur eh luh puh-tee day-zhuh-NAY"},
+  {c:5, fr:"La clé, s'il vous plaît", en:"The key, please", ipa:"lah KLAY"},
+  {c:5, fr:"Le Wi-Fi, s'il vous plaît", en:"The Wi-Fi, please", ipa:"luh wee-FEE"},
+  {c:5, fr:"À quelle heure dois-je libérer la chambre ?", en:"What time is check-out?", ipa:"ah kell ur dwahzh lee-bay-ray lah SHAWM-bruh"},
+  {c:5, fr:"La climatisation ne marche pas", en:"The air conditioning isn't working", ipa:"lah klee-mah-tee-zah-see-ohn nuh marsh PAH"},
+
+  // 6 Emergencies & Health
+  {c:6, fr:"Au secours !", en:"Help!", ipa:"oh suh-KOOR"},
+  {c:6, fr:"Appelez la police !", en:"Call the police!", ipa:"ah-play lah poh-LEES"},
+  {c:6, fr:"Appelez une ambulance !", en:"Call an ambulance!", ipa:"ah-play Un awn-bU-LAWNS"},
+  {c:6, fr:"J'ai besoin d'un médecin", en:"I need a doctor", ipa:"zhay buh-zwan dun mayd-SAN"},
+  {c:6, fr:"Où est l'hôpital ?", en:"Where is the hospital?", ipa:"oo eh loh-pee-TAL"},
+  {c:6, fr:"Où est la pharmacie ?", en:"Where is the pharmacy?", ipa:"oo eh lah far-mah-SEE"},
+  {c:6, fr:"Je ne me sens pas bien", en:"I don't feel well", ipa:"zhuh nuh muh sawn pah bee-AN"},
+  {c:6, fr:"J'ai mal ici", en:"It hurts here", ipa:"zhay mal ee-SEE"},
+  {c:6, fr:"C'est une urgence", en:"It's an emergency", ipa:"say tUn Ur-ZHAWNS"},
+
+  // 7 Numbers & Time
+  {c:7, fr:"un, deux, trois", en:"one, two, three", ipa:"un, duh, trwah"},
+  {c:7, fr:"quatre, cinq, six", en:"four, five, six", ipa:"KAH-truh, sank, sees"},
+  {c:7, fr:"sept, huit, neuf, dix", en:"seven, eight, nine, ten", ipa:"set, weet, nuf, dees"},
+  {c:7, fr:"Quelle heure est-il ?", en:"What time is it?", ipa:"kell ur eh-TEEL"},
+  {c:7, fr:"Aujourd'hui", en:"Today", ipa:"oh-zhoor-DWEE"},
+  {c:7, fr:"Demain", en:"Tomorrow", ipa:"duh-MAN"},
+  {c:7, fr:"Hier", en:"Yesterday", ipa:"ee-YAIR"},
+  {c:7, fr:"Maintenant", en:"Now", ipa:"man-tuh-NAWN"},
+];
+
+/* ============================================================
+   SPEECH — use the browser's French voice
+   ============================================================ */
+let frVoice = null;
+function pickVoice(){
+  const voices = speechSynthesis.getVoices();
+  frVoice = voices.find(v=>/fr-FR/i.test(v.lang)) ||
+            voices.find(v=>/^fr/i.test(v.lang)) || null;
+  const note = document.getElementById('voiceNote');
+  if(!voices.length){ return; }
+  if(frVoice){
+    note.textContent = "🔊 French voice ready ("+frVoice.name+"). Click any speaker to listen.";
+  }else{
+    note.textContent = "🔊 No dedicated French voice found — it'll still read aloud. (Tip: install a French voice in your OS for best results.)";
+  }
+}
+if('speechSynthesis' in window){
+  pickVoice();
+  speechSynthesis.onvoiceschanged = pickVoice;
+}else{
+  document.getElementById('voiceNote').textContent = "⚠️ Your browser doesn't support speech. Phrases & flashcards still work!";
+}
+
+function speak(text, btn){
+  if(!('speechSynthesis' in window)) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'fr-FR';
+  if(frVoice) u.voice = frVoice;
+  u.rate = 0.9; u.pitch = 1;
+  if(btn){
+    btn.classList.add('playing');
+    u.onend = u.onerror = ()=>btn.classList.remove('playing');
+  }
+  speechSynthesis.speak(u);
+}
+
+/* ============================================================
+   LEFT PANEL — categories, search, list
+   ============================================================ */
+const catsEl = document.getElementById('cats');
+const listEl = document.getElementById('list');
+const searchEl = document.getElementById('search');
+let activeCat = -1; // -1 = all
+
+const catColors = ['#0055A4','#EF4135','#37d9a0','#8a6bff','#ff6fb5','#f59e0b','#0ea5e9','#64748b'];
+
+function buildCats(){
+  const all = document.createElement('button');
+  all.className='chip active'; all.dataset.c='3'; all.textContent='⭐ All';
+  all.style.background='linear-gradient(135deg,#1c2237,#3a4366)';
+  all.onclick=()=>{activeCat=-1;setActiveChip(all);renderList();};
+  catsEl.appendChild(all);
+  CATEGORIES.forEach((cat,i)=>{
+    const b=document.createElement('button');
+    b.className='chip'; b.dataset.c=i;
+    b.textContent=cat.emoji+' '+cat.name;
+    b.onclick=()=>{activeCat=i;setActiveChip(b);renderList();};
+    catsEl.appendChild(b);
+  });
+}
+function setActiveChip(el){
+  [...catsEl.children].forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function filtered(){
+  const q=searchEl.value.trim().toLowerCase();
+  return PHRASES.filter(p=>{
+    const catOk = activeCat===-1 || p.c===activeCat;
+    const qOk = !q || p.fr.toLowerCase().includes(q) || p.en.toLowerCase().includes(q);
+    return catOk && qOk;
+  });
+}
+
+function renderList(){
+  const items=filtered();
+  listEl.innerHTML='';
+  if(!items.length){
+    listEl.innerHTML='<div style="padding:20px;text-align:center;color:#8089a3">No phrases found 🤔</div>';
+    return;
+  }
+  items.forEach(p=>{
+    const idx=PHRASES.indexOf(p);
+    const row=document.createElement('div');
+    row.className='row';
+    row.innerHTML=`
+      <div class="txt">
+        <div class="fr">${p.fr}</div>
+        <div class="en">${p.en}</div>
+        <div class="ipa">🗣️ ${p.ipa}</div>
+      </div>
+      <span class="tag" style="background:${catColors[p.c]}">${CATEGORIES[p.c].emoji}</span>
+      <button class="speak" title="Hear it in French">🔊</button>`;
+    const sp=row.querySelector('.speak');
+    sp.onclick=(e)=>{e.stopPropagation();speak(p.fr,sp);};
+    row.onclick=()=>{ goToCard(idx); };
+    listEl.appendChild(row);
+  });
+}
+
+/* ============================================================
+   RIGHT PANEL — flashcards
+   ============================================================ */
+let deck = PHRASES.map((_,i)=>i);   // order of indices
+let pos = 0;
+let known = new Set();
+
+const card=document.getElementById('card');
+const frontFr=document.getElementById('frontFr');
+const frontIpa=document.getElementById('frontIpa');
+const frontTag=document.getElementById('frontTag');
+const backEn=document.getElementById('backEn');
+const counter=document.getElementById('counter');
+const bar=document.getElementById('bar');
+const knownNote=document.getElementById('knownNote');
+
+function currentPhrase(){ return PHRASES[deck[pos]]; }
+
+function renderCard(){
+  const p=currentPhrase();
+  card.classList.remove('flipped');
+  // small delay so flip-back isn't visible while content swaps
+  setTimeout(()=>{
+    frontFr.innerHTML=p.fr;
+    frontIpa.textContent='🗣️ '+p.ipa;
+    frontTag.textContent=CATEGORIES[p.c].emoji+' '+CATEGORIES[p.c].name;
+    backEn.textContent=p.en;
+  },120);
+  counter.textContent=(pos+1)+' / '+deck.length;
+  bar.style.width=((known.size/PHRASES.length)*100)+'%';
+  const isKnown=known.has(deck[pos]);
+  knownNote.textContent = known.size+' / '+PHRASES.length+' phrases marked known'
+    + (isKnown ? '  ·  ✅ this one is known!' : '')
+    + '  ·  '+encourage();
+}
+function encourage(){
+  const pct=known.size/PHRASES.length;
+  if(pct===0) return 'Allons-y! 🚀';
+  if(pct<.3) return 'Bon début! 👍';
+  if(pct<.6) return 'Tu progresses! 🌟';
+  if(pct<1) return 'Presque là! 🔥';
+  return 'Parfait! Tu es prêt(e)! 🏆';
+}
+
+function goToCard(phraseIndex){
+  const d=deck.indexOf(phraseIndex);
+  if(d>=0){ pos=d; renderCard(); }
+  // scroll right panel into view on mobile
+  document.querySelector('.card-stage').scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+document.getElementById('flip').onclick=()=>card.classList.toggle('flipped');
+card.onclick=(e)=>{ if(e.target.closest('.speak-lg'))return; card.classList.toggle('flipped'); };
+document.getElementById('next').onclick=()=>{pos=(pos+1)%deck.length;renderCard();};
+document.getElementById('prev').onclick=()=>{pos=(pos-1+deck.length)%deck.length;renderCard();};
+document.getElementById('speakCard').onclick=(e)=>{e.stopPropagation();speak(currentPhrase().fr,e.currentTarget);};
+
+document.getElementById('shuffle').onclick=()=>{
+  for(let i=deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]];}
+  pos=0;renderCard();
+};
+document.getElementById('markKnown').onclick=()=>{
+  known.add(deck[pos]);
+  renderCard();
+  if(known.size===PHRASES.length) celebrate();
+  else { pos=(pos+1)%deck.length; setTimeout(renderCard,120); }
+};
+document.getElementById('resetKnown').onclick=()=>{known.clear();renderCard();};
+
+// keyboard shortcuts
+document.addEventListener('keydown',(e)=>{
+  if(document.activeElement===searchEl) return;
+  if(e.key==='ArrowRight')document.getElementById('next').click();
+  if(e.key==='ArrowLeft')document.getElementById('prev').click();
+  if(e.key===' '){e.preventDefault();card.classList.toggle('flipped');}
+  if(e.key.toLowerCase()==='k')document.getElementById('markKnown').click();
+});
+
+searchEl.addEventListener('input',renderList);
+
+/* ============================================================
+   CONFETTI 🎉
+   ============================================================ */
+function celebrate(){
+  const cv=document.getElementById('confetti');
+  const ctx=cv.getContext('2d');
+  cv.width=innerWidth;cv.height=innerHeight;
+  const colors=['#0055A4','#EF4135','#ffce3a','#37d9a0','#8a6bff','#ff6fb5'];
+  const bits=Array.from({length:160},()=>({
+    x:Math.random()*cv.width,y:-20-Math.random()*cv.height,
+    r:4+Math.random()*6,c:colors[Math.floor(Math.random()*colors.length)],
+    vy:2+Math.random()*4,vx:-2+Math.random()*4,rot:Math.random()*6,vr:-.2+Math.random()*.4
+  }));
+  let t=0;
+  (function frame(){
+    t++;ctx.clearRect(0,0,cv.width,cv.height);
+    bits.forEach(b=>{
+      b.x+=b.vx;b.y+=b.vy;b.rot+=b.vr;
+      ctx.save();ctx.translate(b.x,b.y);ctx.rotate(b.rot);
+      ctx.fillStyle=b.c;ctx.fillRect(-b.r/2,-b.r/2,b.r,b.r*1.6);ctx.restore();
+    });
+    if(t<220)requestAnimationFrame(frame);else ctx.clearRect(0,0,cv.width,cv.height);
+  })();
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+buildCats();
+renderList();
+renderCard();
+</script>
+</body>
+</html>
