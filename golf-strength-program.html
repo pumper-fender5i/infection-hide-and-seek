@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0f1a13">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Golf Strong">
+<title>Golf Strength Program · Sundberg 5-Week</title>
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230f1a13'/%3E%3Ccircle cx='90' cy='74' r='30' fill='none' stroke='%2352a36e' stroke-width='6'/%3E%3Cline x1='90' y1='104' x2='90' y2='150' stroke='%2352a36e' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M90 150 L130 138 L90 126 Z' fill='%23d4a336'/%3E%3C/svg%3E">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  :root{
+    --bg:#0f1a13; --bg2:#0d1f12; --line:#1e3a26; --line2:#2d5a3a;
+    --txt:#e8f0e8; --txt2:#c0d8c4; --muted:#7aab8a; --muted2:#5a8a6a;
+    --green:#2d6a4f; --green-a:#52a36e; --gold:#d4a336;
+    --d1:#2d6a4f; --d1a:#52a36e; --d2:#1a4971; --d2a:#5a9fd4; --d3:#6b3a1f; --d3a:#d4905a;
+    --serif:'Georgia','Times New Roman',serif;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  }
+  html,body{background:var(--bg);color:var(--txt);font-family:var(--sans);overscroll-behavior-y:none}
+  body{min-height:100vh;min-height:100dvh;padding-bottom:env(safe-area-inset-bottom)}
+  #app{max-width:520px;margin:0 auto;min-height:100vh;min-height:100dvh;position:relative}
+  h1,h2,h3,.serif{font-family:var(--serif)}
+  button{font-family:inherit;cursor:pointer;color:inherit;border:none;background:none}
+  input{font-family:inherit}
+  a{color:inherit}
+  .hidden{display:none!important}
+
+  /* top safe area */
+  .safetop{padding-top:env(safe-area-inset-top)}
+
+  /* ===== Header ===== */
+  .hero{background:linear-gradient(135deg,#1a3a22 0%,#0f1a13 100%);border-bottom:1px solid var(--line2);padding:calc(22px + env(safe-area-inset-top)) 20px 16px;text-align:center}
+  .hero .kicker{font-size:10px;letter-spacing:3px;color:var(--green-a);text-transform:uppercase;margin-bottom:6px}
+  .hero h1{font-size:23px;color:#d4edda;margin-bottom:3px}
+  .hero .sub{font-size:12px;color:var(--muted)}
+
+  /* week selector */
+  .weekbar{display:flex;gap:6px;padding:12px 14px 4px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .weekbar::-webkit-scrollbar{display:none}
+  .weekpill{flex:0 0 auto;background:rgba(255,255,255,0.04);border:1px solid var(--line2);border-radius:20px;padding:8px 14px;font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap;transition:all .15s}
+  .weekpill .wl{font-size:9px;letter-spacing:1px;text-transform:uppercase;opacity:.7;display:block}
+  .weekpill.active{background:var(--green);border-color:var(--green-a);color:#fff}
+  .weekpill.deload.active{background:#6b3a1f;border-color:#d4905a}
+
+  /* stats strip */
+  .stats{display:flex;gap:8px;padding:8px 14px 4px}
+  .stat{flex:1;background:rgba(255,255,255,0.04);border:1px solid var(--line);border-radius:10px;padding:9px 6px;text-align:center}
+  .stat .v{font-size:19px;font-weight:800;color:#d4edda;font-family:var(--serif)}
+  .stat .v small{font-size:11px;color:var(--muted)}
+  .stat .l{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-top:2px}
+  .stat.fire .v{color:var(--gold)}
+
+  /* day cards */
+  .days{padding:12px 14px 90px;display:flex;flex-direction:column;gap:12px}
+  .daycard{border-radius:14px;padding:14px;text-align:left;position:relative;overflow:hidden;transition:transform .1s}
+  .daycard:active{transform:scale(.985)}
+  .daycard .badge{display:inline-block;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;margin-bottom:8px}
+  .daycard .dtitle{font-size:19px;font-weight:700;color:#d4edda;font-family:var(--serif)}
+  .daycard .dmeta{font-size:11px;color:var(--muted);margin-top:2px}
+  .daycard .svgstrip{display:flex;gap:6px;margin:10px 0 4px}
+  .daycard .svgstrip .cell{width:42px;height:42px;background:var(--bg2);border-radius:7px;border:1px solid var(--line);overflow:hidden;flex:0 0 auto;display:flex;align-items:center;justify-content:center}
+  .daycard .ring{position:absolute;top:12px;right:12px;width:46px;height:46px}
+  .daycard .open{margin-top:12px;color:#fff;text-align:center;padding:9px;border-radius:8px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:7px}
+  .donechk{position:absolute;top:14px;right:14px;background:var(--green-a);color:#06210f;font-size:11px;font-weight:800;padding:4px 9px;border-radius:20px;display:flex;align-items:center;gap:4px}
+
+  /* generic screen */
+  .screen{min-height:100vh;min-height:100dvh}
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:calc(11px + env(safe-area-inset-top)) 14px 11px;border-bottom:1px solid var(--line2);position:sticky;top:0;background:var(--bg);z-index:20}
+  .backbtn{color:var(--green-a);font-size:13px;font-weight:600;padding:4px 2px;display:flex;align-items:center;gap:5px}
+  .navbtns{display:flex;gap:8px}
+  .navbtns .nb{font-size:12px;padding:6px 12px;border-radius:7px;font-weight:600;border:1px solid var(--line2);background:rgba(255,255,255,0.05);color:var(--txt2)}
+  .navbtns .nb.primary{background:var(--green-a);border-color:transparent;color:#06210f;font-weight:800}
+  .navbtns .nb:disabled{opacity:.3}
+
+  /* day view */
+  .dayhead{padding:13px 16px 11px;border-bottom:1px solid var(--line2);position:sticky;top:0;background:var(--bg);z-index:20}
+  .dayhead .row{display:flex;align-items:center;gap:10px;margin-top:7px}
+  .startbtn{margin:14px 16px 2px;display:block;width:calc(100% - 32px);color:#fff;font-size:14px;font-weight:800;padding:14px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 4px 18px rgba(0,0,0,.35)}
+  .progresswrap{margin:10px 16px 0;height:7px;background:rgba(255,255,255,0.07);border-radius:4px;overflow:hidden}
+  .progressbar{height:100%;width:0;border-radius:4px;transition:width .3s}
+  .section{padding:14px 16px 0}
+  .section .stitle{font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:800}
+  .section .ssub{font-size:11px;color:var(--muted2);margin-top:2px}
+  .exrow{display:flex;align-items:stretch;overflow:hidden;border-radius:10px;border:1px solid var(--line2);margin-top:8px;background:rgba(255,255,255,0.035);transition:transform .1s,opacity .2s}
+  .exrow:active{transform:scale(.99)}
+  .exrow.done{opacity:.55}
+  .exrow .thumb{width:64px;flex:0 0 auto;background:var(--bg2);display:flex;align-items:center;justify-content:center;padding:6px}
+  .exrow .thumb .cell{width:52px;height:52px}
+  .exrow .body{flex:1;padding:9px 8px 9px 11px;min-width:0}
+  .exrow .nm{font-size:14px;color:#d4edda;font-weight:600}
+  .exrow .nt{font-size:11px;margin-top:2px;font-weight:600}
+  .exrow .rp{font-size:12px;color:var(--muted);margin-top:2px}
+  .exrow .right{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 11px;flex:0 0 auto;gap:5px}
+  .exrow .chev{font-size:18px}
+  .exrow .tick{width:24px;height:24px;border-radius:50%;border:2px solid var(--line2);display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent}
+  .exrow.done .tick{border-color:var(--green-a);background:var(--green-a);color:#06210f}
+
+  /* exercise detail */
+  .exhead-illus{background:var(--bg2);border-bottom:1px solid var(--line);display:flex;justify-content:center;align-items:center;height:184px;padding:10px 20px}
+  .exhead-illus .frame{height:168px;width:auto;max-width:290px}
+  .exbody{padding:14px 18px 120px}
+  .tag{font-size:10px;background:rgba(82,163,110,0.2);color:var(--green-a);padding:3px 10px;border-radius:10px;display:inline-block;margin-bottom:8px;font-weight:700}
+  .exbody h2{font-size:21px;color:#d4edda;margin-bottom:4px}
+  .muscles{font-size:12px;color:var(--muted);margin-bottom:14px}
+  .card{border-radius:11px;padding:12px 13px;margin-bottom:13px}
+  .card .clabel{font-size:10px;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;font-weight:700}
+  .card.benefit{background:rgba(212,163,54,0.07);border:1px solid rgba(212,163,54,0.22)}
+  .card.benefit .clabel{color:var(--gold)}
+  .card.benefit .ctext{font-size:13px;color:#e8d9a8;line-height:1.6}
+  .card.prog{background:rgba(45,106,79,0.15);border:1px solid var(--green)}
+  .card.prog .clabel{color:var(--green-a)}
+  .progrow{display:flex;gap:10px;margin-bottom:7px;align-items:flex-start}
+  .progrow.cur{background:rgba(82,163,110,.12);margin:0 -6px 7px;padding:5px 6px;border-radius:7px}
+  .progrow .wk{width:46px;font-size:10px;font-weight:800;text-transform:uppercase;padding-top:2px;flex:0 0 auto}
+  .progrow .pd{font-size:13px;color:var(--txt2);line-height:1.5}
+  .progrow .nowtag{font-size:8px;background:var(--green-a);color:#06210f;padding:1px 5px;border-radius:8px;margin-left:6px;vertical-align:middle}
+  .steps .clabel{color:var(--green-a)}
+  .step{display:flex;gap:10px;margin-bottom:9px;align-items:flex-start}
+  .step .n{width:22px;height:22px;border-radius:50%;background:var(--green);color:#d4edda;font-size:11px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;font-weight:700}
+  .step .t{font-size:13px;color:var(--txt2);line-height:1.6;padding-top:2px}
+  .cue{background:rgba(82,163,110,0.1);border-left:3px solid var(--green-a);border-radius:0 9px 9px 0;padding:11px 13px;margin-bottom:13px}
+  .cue .clabel{color:var(--green-a)}
+  .cue .ct{font-size:14px;color:#d4edda;font-style:italic;font-family:var(--serif)}
+  .videolink{display:flex;align-items:center;gap:10px;background:rgba(255,0,0,0.08);border:1px solid rgba(255,80,80,0.25);border-radius:11px;padding:12px 14px;text-decoration:none;margin-bottom:18px}
+  .videolink .yt{background:#ff0000;color:#fff;font-size:11px;padding:4px 8px;border-radius:4px;font-weight:800;flex:0 0 auto}
+  .videolink .vl{font-size:13px;color:#ffb3b0;line-height:1.4}
+
+  /* logger */
+  .logger{border:1px solid var(--line2);border-radius:12px;padding:13px;margin-bottom:14px;background:rgba(255,255,255,0.025)}
+  .logger .lhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+  .logger .lhead .lt{font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:800}
+  .logger .target{font-size:12px;color:var(--muted);margin-bottom:10px}
+  .lastweek{font-size:11px;color:var(--muted2);margin-bottom:10px}
+  .lastweek b{color:var(--green-a)}
+  .setrow{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .setrow .sidx{width:20px;font-size:12px;color:var(--muted);font-weight:700;flex:0 0 auto;text-align:center}
+  .setrow .fld{flex:1;display:flex;flex-direction:column;gap:2px}
+  .setrow .fld label{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted2)}
+  .setrow input{width:100%;background:var(--bg2);border:1px solid var(--line2);border-radius:8px;padding:9px 8px;color:var(--txt);font-size:15px;text-align:center}
+  .setrow input:focus{outline:none;border-color:var(--green-a)}
+  .setrow .setdone{width:38px;height:38px;border-radius:9px;border:2px solid var(--line2);flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--muted);margin-top:13px}
+  .setrow .setdone.on{background:var(--green-a);border-color:var(--green-a);color:#06210f}
+  .setrow.pb .sidx::after{content:'★';color:var(--gold);display:block;font-size:10px}
+  .loggeractions{display:flex;gap:8px;margin-top:4px}
+  .miniact{flex:1;font-size:12px;font-weight:700;padding:9px;border-radius:9px;border:1px solid var(--line2);background:rgba(255,255,255,0.05);color:var(--txt2);text-align:center}
+  .miniact.add{color:var(--green-a)}
+
+  /* rep counter */
+  .counter{display:flex;flex-direction:column;align-items:center;margin:6px 0 4px}
+  .tapbtn{width:128px;height:128px;border-radius:50%;background:radial-gradient(circle at 50% 38%,#2d6a4f,#143524);border:3px solid var(--green-a);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 6px 22px rgba(0,0,0,.4);transition:transform .07s}
+  .tapbtn:active{transform:scale(.93)}
+  .tapbtn .cnum{font-size:46px;font-weight:800;color:#d4edda;font-family:var(--serif);line-height:1}
+  .tapbtn .clbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--green-a);margin-top:4px}
+  .counterctrls{display:flex;gap:10px;margin-top:12px;align-items:center}
+  .counterctrls button{width:42px;height:42px;border-radius:10px;border:1px solid var(--line2);background:rgba(255,255,255,0.05);font-size:20px;color:var(--txt2);display:flex;align-items:center;justify-content:center}
+  .counterctrls .log{width:auto;padding:0 18px;color:var(--green-a);font-weight:800;font-size:13px}
+
+  /* timer */
+  .timerwrap{display:flex;flex-direction:column;align-items:center;margin:4px 0}
+  .timedisplay{font-size:54px;font-weight:800;font-family:var(--serif);color:#d4edda;letter-spacing:1px}
+  .timedisplay.warn{color:var(--gold)}
+  .timedisplay.go{color:var(--green-a)}
+  .timerctrls{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;justify-content:center}
+  .timerctrls button{padding:10px 18px;border-radius:10px;font-weight:800;font-size:13px;border:1px solid var(--line2);background:rgba(255,255,255,0.05);color:var(--txt2)}
+  .timerctrls button.go{background:var(--green-a);color:#06210f;border-color:transparent}
+  .segtabs{display:flex;gap:6px;margin-bottom:12px;background:var(--bg2);padding:4px;border-radius:11px}
+  .segtabs button{flex:1;padding:8px;border-radius:8px;font-size:12px;font-weight:700;color:var(--muted)}
+  .segtabs button.on{background:var(--green);color:#fff}
+
+  /* rest timer floating */
+  #resttimer{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom));width:min(440px,calc(100% - 28px));background:#10271a;border:1px solid var(--green);border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;z-index:60;box-shadow:0 8px 30px rgba(0,0,0,.5)}
+  #resttimer .rt-num{font-size:30px;font-weight:800;font-family:var(--serif);color:var(--green-a);min-width:62px;text-align:center}
+  #resttimer .rt-mid{flex:1}
+  #resttimer .rt-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+  #resttimer .rt-bar{height:5px;background:rgba(255,255,255,0.08);border-radius:3px;margin-top:5px;overflow:hidden}
+  #resttimer .rt-fill{height:100%;background:var(--green-a);width:100%}
+  #resttimer .rt-btns{display:flex;gap:6px}
+  #resttimer .rt-btns button{padding:7px 10px;border-radius:8px;font-size:12px;font-weight:700;background:rgba(255,255,255,0.07);color:var(--txt2);border:1px solid var(--line2)}
+
+  /* exercise chip rail */
+  .chiprail{display:flex;gap:7px;padding:11px 16px;overflow-x:auto;border-bottom:1px solid var(--line);-webkit-overflow-scrolling:touch}
+  .chiprail::-webkit-scrollbar{display:none}
+  .chip{flex:0 0 auto;font-size:12px;padding:7px 12px;border-radius:20px;border:1px solid var(--line2);background:rgba(255,255,255,0.04);color:var(--muted);font-weight:600;white-space:nowrap}
+  .chip.on{background:var(--green);color:#fff;border-color:var(--green-a)}
+  .chip.done::before{content:'✓ ';color:var(--green-a)}
+  .chip.on.done::before{color:#bfe9cc}
+
+  /* guided */
+  .guided-top{display:flex;align-items:center;gap:10px;padding:calc(11px + env(safe-area-inset-top)) 14px 8px}
+  .guided-top .gx{font-size:13px;color:var(--green-a);font-weight:700}
+  .gcount{font-size:12px;color:var(--muted)}
+  .gsec{font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:800;text-align:center;margin-top:4px}
+  .gname{font-size:25px;text-align:center;color:#d4edda;font-family:var(--serif);margin:2px 16px 4px}
+  .gtarget{text-align:center;font-size:14px;color:var(--gold);font-weight:700;margin-bottom:6px}
+  .gillus{height:150px;display:flex;align-items:center;justify-content:center;margin:6px 0}
+  .gillus .frame{height:140px;max-width:240px}
+  .gnav{position:fixed;left:0;right:0;bottom:0;display:flex;gap:10px;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(180deg,transparent,var(--bg) 24%);z-index:40}
+  .gnav button{flex:1;padding:15px;border-radius:12px;font-weight:800;font-size:15px;border:1px solid var(--line2);background:rgba(255,255,255,0.05);color:var(--txt2)}
+  .gnav button.primary{flex:2;background:var(--green-a);color:#06210f;border-color:transparent}
+  .gnav button.finish{background:var(--gold);color:#241a00}
+
+  /* bottom nav */
+  .tabbar{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:520px;display:flex;background:rgba(13,25,16,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);z-index:30;padding-bottom:env(safe-area-inset-bottom)}
+  .tabbar button{flex:1;padding:9px 0 7px;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted2);font-size:10px;font-weight:600}
+  .tabbar button.on{color:var(--green-a)}
+  .tabbar button .ic{font-size:19px;line-height:1}
+
+  /* history / settings */
+  .pad{padding:14px 16px 110px}
+  .h2row{font-size:20px;color:#d4edda;font-family:var(--serif);margin-bottom:4px}
+  .sub2{font-size:12px;color:var(--muted);margin-bottom:14px}
+  .histcard{border:1px solid var(--line2);border-radius:11px;padding:12px;margin-bottom:10px}
+  .histcard .ht{display:flex;justify-content:space-between;align-items:center}
+  .histcard .hname{font-size:15px;color:#d4edda;font-weight:700}
+  .histcard .hdate{font-size:11px;color:var(--muted)}
+  .histcard .hmeta{font-size:12px;color:var(--muted);margin-top:6px}
+  .setbtn{width:100%;text-align:left;border:1px solid var(--line2);border-radius:11px;padding:13px 14px;margin-bottom:10px;background:rgba(255,255,255,0.03);font-size:14px;color:var(--txt2);display:flex;justify-content:space-between;align-items:center}
+  .setbtn .sv{font-size:12px;color:var(--muted)}
+  .toggle{width:46px;height:27px;border-radius:14px;background:var(--line2);position:relative;flex:0 0 auto;transition:background .2s}
+  .toggle.on{background:var(--green-a)}
+  .toggle .knob{position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:50%;background:#fff;transition:left .2s}
+  .toggle.on .knob{left:22px}
+  .empty{text-align:center;color:var(--muted2);font-size:13px;padding:40px 20px;line-height:1.7}
+
+  /* confetti + toast */
+  #confetti{position:fixed;inset:0;pointer-events:none;z-index:80}
+  #celebrate{position:fixed;inset:0;z-index:81;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(8,16,10,.82);text-align:center;padding:30px}
+  #celebrate .big{font-size:60px;margin-bottom:10px}
+  #celebrate h2{font-size:28px;color:#d4edda;margin-bottom:8px}
+  #celebrate p{font-size:14px;color:var(--txt2);line-height:1.6;max-width:300px;margin-bottom:8px}
+  #celebrate .cstats{display:flex;gap:14px;margin:14px 0 22px}
+  #celebrate .cstat .v{font-size:26px;font-weight:800;color:var(--gold);font-family:var(--serif)}
+  #celebrate .cstat .l{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+  #celebrate button{background:var(--green-a);color:#06210f;font-weight:800;padding:14px 36px;border-radius:30px;font-size:15px}
+  #toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(86px + env(safe-area-inset-bottom));background:#143524;border:1px solid var(--green-a);color:#d4edda;font-size:13px;font-weight:600;padding:10px 18px;border-radius:24px;z-index:70;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(-6px)}
+
+  /* install hint */
+  #installhint{margin:0 14px 16px;background:rgba(82,163,110,0.08);border:1px solid var(--green);border-left:3px solid var(--green-a);border-radius:10px;padding:11px 13px;font-size:12px;color:var(--txt2);line-height:1.55}
+  #installhint b{color:var(--green-a)}
+  #installhint .x{float:right;color:var(--muted);font-size:16px;padding:0 0 6px 10px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<canvas id="confetti" class="hidden"></canvas>
+<div id="toast"></div>
+<script>
+"use strict";
+/* ============================ DATA ============================ */
+const EX = {
+  wallSlides:{id:"wallSlides",name:"Wall Slides",tag:"★ Trainer Recommended",muscles:"Shoulders, Scapula, Thoracic Spine",
+    golfBenefit:`Shoulder blade control directly impacts your backswing and follow-through. This is the #1 exercise your trainer recommended for your shoulder.`,
+    howTo:["Stand with back flat against a wall — head, upper back, and tailbone all touching","Raise arms to 90°, elbows bent, backs of hands against the wall","Slowly slide arms UP the wall, keeping everything in contact","Return to start. Keep lower back from arching off the wall"],
+    cue:"'Snow angel, but standing'",videoUrl:"https://www.youtube.com/watch?v=W_p73Vqhs-8",videoLabel:"Fix Your Shoulders with Wall Slides – Excel Performance"},
+  serratusWallSlides:{id:"serratusWallSlides",name:"Serratus Wall Slides w/ Foam Roller",tag:"★ Trainer Recommended",muscles:"Serratus Anterior, Shoulder Stabilizers",
+    golfBenefit:`Serratus anterior keeps the shoulder blade flush to the rib cage — critical for a clean shoulder turn and avoiding impingement.`,
+    howTo:["Place a foam roller horizontally between your forearms and the wall","Lean in with forearms on the roller, elbows at shoulder height","Roll arms upward, sliding the roller up the wall while keeping core tight","Feel the sides of your rib cage engage as you reach up","Slowly lower back down"],
+    cue:"'Push the wall away with your shoulder blades, not your arms'",videoUrl:"https://www.youtube.com/watch?v=GaP20t6ZOfU",videoLabel:"Wall Slides Shoulder Mobility – YouTube"},
+  hipFlexorStretch:{id:"hipFlexorStretch",name:"Half-Kneeling Hip Flexor Stretch",muscles:"Hip Flexors, Psoas, Thoracic Spine",
+    golfBenefit:`Tight hip flexors kill rotation. Opening them up lets you coil fully in the backswing and unload completely through impact.`,
+    howTo:["Kneel on one knee, front foot flat on floor, knee at 90°","Squeeze the glute of your back (kneeling) leg — this is key","Shift hips slightly forward until you feel a stretch in front of the back hip","Reach same-side arm overhead and rotate slightly away","Hold 30 seconds per side"],
+    cue:"'Glute squeeze first, then lean' — without the squeeze it doesn't work",videoUrl:"https://www.youtube.com/watch?v=YQmpTMnSRsk",videoLabel:"Half-Kneeling Hip Flexor Stretch – YouTube"},
+  hip90:{id:"hip90",name:"90/90 Hip Rotations",muscles:"Hip Internal & External Rotators, Glutes",
+    golfBenefit:`Hip rotation is where swing power comes from. This frees up the hip socket to rotate fully in both directions — backswing and downswing.`,
+    howTo:["Sit on the floor, both knees bent to 90° — one in front, one to the side","Lean slightly forward with a tall spine","Rotate your hips to bring the back knee forward and the front knee back","Control the rotation — don't just flop over","8 reps per side"],
+    cue:"'Rotate from the hip, not the spine'",videoUrl:"https://www.youtube.com/watch?v=xCz1TDmLMw8",videoLabel:"90/90 Hip Rotation Tutorial – YouTube"},
+  openBook:{id:"openBook",name:"Open Book T-Spine Rotation",muscles:"Thoracic Spine, Chest, Shoulders",
+    golfBenefit:`T-spine mobility = swing width. A stiff thoracic spine forces you to compensate with your lower back — which contributed to your back issues.`,
+    howTo:["Lie on your side, knees stacked and bent to 90°","Arms straight in front, palms together","Slowly rotate your top arm back and open, following with your eyes","Try to get your shoulder to touch the floor — don't force it","Hold 2 seconds at end range, return. 6 reps per side"],
+    cue:"'Eyes follow the hand' — your gaze drives the rotation",videoUrl:"https://www.youtube.com/watch?v=QGJH-PETFOU",videoLabel:"Open Book T-Spine Rotation – YouTube"},
+  gluteBridge:{id:"gluteBridge",name:"Glute Bridge w/ Band Abduction",muscles:"Glutes, Hip Abductors, Core",
+    golfBenefit:`Activates the glutes before heavy loading. Glute strength is the engine behind ground force in the swing — Sundberg specifically calls this out.`,
+    howTo:["Loop a mini-band just above your knees","Lie on your back, knees bent, feet flat hip-width apart","Press knees out against the band (don't let them cave in)","Drive hips straight up by squeezing glutes — not your lower back","Hold 1 second at top, lower controlled. 10-12 reps"],
+    cue:"'Push the floor away' — think leg drive, not back extension",videoUrl:"https://www.youtube.com/watch?v=OmtSxk2czRk",videoLabel:"Glute Bridge with Band Tutorial – YouTube"},
+  sidePlank:{id:"sidePlank",name:"Side Plank",muscles:"Obliques, Lateral Core, Glute Med",
+    golfBenefit:`Lateral stability keeps your spine angle consistent through the swing. Prevents the lateral sway that leaks power.`,
+    howTo:["Lie on your side, elbow under shoulder, feet stacked","Lift your hips — body forms a straight line head to heel","Don't let your hip sag or rotate forward","Hold 20-30 seconds per side","Modification: drop the bottom knee to the floor"],
+    cue:"'Stack your hips — don't roll forward'",videoUrl:"https://www.youtube.com/watch?v=K2VljzCC16g",videoLabel:"Side Plank Tutorial – YouTube"},
+  frontPlank:{id:"frontPlank",name:"Front Plank",muscles:"Core, Transverse Abdominis, Shoulders",
+    golfBenefit:`Core stiffness transfers force from your lower body to the club. A leaky core is a power leak.`,
+    howTo:["Forearms on the floor, elbows under shoulders","Body in a straight line from head to heels — no hip rise or sag","Squeeze glutes, brace abs like you're about to take a punch","Hold 30 seconds. Breathe — don't hold your breath"],
+    cue:"'Ribs down, glutes on' — two cues that fix 90% of plank problems",videoUrl:"https://www.youtube.com/watch?v=pvIjsG5Svdk",videoLabel:"Perfect Plank Form – YouTube"},
+  bandPullApart:{id:"bandPullApart",name:"Band Pull-Aparts",muscles:"Rear Deltoids, Rhomboids, Rotator Cuff",
+    golfBenefit:`Strengthens the muscles that hold your shoulder blades back — directly supports proper posture at address and throughout the swing.`,
+    howTo:["Hold a resistance band with both hands at shoulder height, arms straight","Pull the band apart by squeezing your shoulder blades together","Arms end out to your sides — band touches your chest","Control back to start. 8-12 reps","Keep arms straight — don't bend elbows"],
+    cue:"'Chest up, pull apart' — lead with the chest, not the arms",videoUrl:"https://www.youtube.com/watch?v=83N4nFhGNzw",videoLabel:"Band Pull-Aparts Tutorial – YouTube"},
+  bandExtRotation:{id:"bandExtRotation",name:"Band External Rotations",muscles:"Rotator Cuff, Infraspinatus, Teres Minor",
+    golfBenefit:`Rotator cuff health protects your shoulder through thousands of swings. External rotation strength is often the missing link in shoulder rehab.`,
+    howTo:["Hold a light band with elbow at 90°, tucked to your side","Rotate your forearm outward — away from your body","Keep the elbow pinned to your side throughout","Slowly return. 12 reps","Go light and feel it — this is rehab-level"],
+    cue:"'Elbow stays glued to your hip' — if it lifts, you're compensating",videoUrl:"https://www.youtube.com/watch?v=l24S3hqXHNs",videoLabel:"Band External Rotation – YouTube"},
+  catCow:{id:"catCow",name:"Cat-Cow to T-Spine Rotation",muscles:"Thoracic Spine, Lumbar Spine, Core",
+    golfBenefit:`Warms up the full spinal chain and gets rotational movement before heavy loading. Valuable for back health between sessions.`,
+    howTo:["On all fours, knees under hips, hands under shoulders","Inhale: drop belly, lift chest and tailbone (Cow)","Exhale: round the spine up toward ceiling (Cat)","After a few reps: drop one elbow toward floor and rotate that shoulder to ceiling","6 reps per side on the rotation"],
+    cue:"'Breathe drives the movement' — don't rush through it",videoUrl:"https://www.youtube.com/watch?v=kqnua4rHVVA",videoLabel:"Cat-Cow to T-Spine Rotation – YouTube"},
+  pogoJumps:{id:"pogoJumps",name:"Pogo Jumps",muscles:"Calves, Achilles, Ankles, Neuromuscular System",
+    golfBenefit:`Activates the stretch-shortening cycle — the same rapid force production used in the transition from backswing to downswing.`,
+    howTo:["Stand tall, feet hip-width apart","Bounce rapidly on your toes — minimal knee bend","Land and immediately leave the ground — think 'springy'","Arms can help for rhythm. Stay on the balls of your feet","2×10 reps. Rest 60 seconds between sets"],
+    cue:"'Hot ground' — get off the floor as fast as possible",videoUrl:"https://www.youtube.com/watch?v=dUmqM5hAQ3M",videoLabel:"Pogo Jumps Tutorial – YouTube"},
+  lateralHops:{id:"lateralHops",name:"Lateral Line Hops",muscles:"Ankles, Hip Abductors, Lateral Stability",
+    golfBenefit:`Trains lateral force production and landing stability — mirrors the lateral shift and weight transfer in the downswing.`,
+    howTo:["Stand on one side of an imaginary line","Hop laterally over the line and land softly on both feet","Immediately hop back. Stay light and quick","2×8 each direction. Rest 60 seconds","Focus on soft, quiet landings — absorb through the legs"],
+    cue:"'Land quiet' — loud landings mean you're not absorbing properly",videoUrl:"https://www.youtube.com/watch?v=q53Rq7_B8mQ",videoLabel:"Lateral Hops Tutorial – YouTube"},
+  sqJumpStick:{id:"sqJumpStick",name:"Squat Jump to Stick",muscles:"Quads, Glutes, Hamstrings, Landing Mechanics",
+    golfBenefit:`Teaches your body to produce and absorb force — same demand as driving through the ball at impact and decelerating the swing.`,
+    howTo:["Stand feet shoulder-width apart","Drop into a quick squat, then explode upward","Land softly with a controlled 'stick' — hold the landing 2 seconds","Knees track over toes on landing, don't let them cave","2×5 reps. Quality over speed — nail each landing"],
+    cue:"'Stick the landing like a gymnast' — absorb and hold",videoUrl:"https://www.youtube.com/watch?v=CVaEhXotL7M",videoLabel:"Squat Jump to Stick Tutorial – YouTube"},
+  splitSquat:{id:"splitSquat",name:"Rear-Foot Elevated Split Squat",muscles:"Quads, Glutes, Hip Flexors",
+    golfBenefit:`Sundberg: 'At impact you push through the ground with your lead leg.' Single-leg strength = rotational power and stability through the ball.`,
+    howTo:["Place rear foot on a bench or box behind you, laces down","Front foot far enough forward so knee stays over ankle at bottom","Lower straight down until front thigh is parallel to floor","Drive through front heel to stand. Keep torso upright","Hold dumbbells at sides — use bodyweight first to learn"],
+    cue:"'Elevator, not escalator' — go straight down, not forward",videoUrl:"https://www.youtube.com/watch?v=R0CChWA8D2E",videoLabel:"Unlock Leg Strength: RFESS Guide – YouTube",
+    progression:[{week:1,detail:"3×8 — choose weight you can do 12 reps with"},{week:2,detail:"3×10"},{week:3,detail:"3×12"},{week:4,detail:"3×6, 6, max reps"},{week:5,detail:"2×6 @ 50% weight (deload)"}]},
+  slRdl:{id:"slRdl",name:"Single-Leg Romanian Deadlift",muscles:"Hamstrings, Glutes, Lower Back",
+    golfBenefit:`Loads your backswing glute. Hamstring strength prevents early extension that kills distance. The balance demand mirrors single-leg demands of the swing.`,
+    howTo:["Stand on one leg, slight bend in standing knee","Hinge at the hip, pushing rear leg straight back as counterbalance","Lower dumbbells toward the floor — spine neutral, don't round","Stop when you feel a hamstring stretch (torso roughly parallel)","Drive hip forward to return. Squeeze glute at top"],
+    cue:"'Teapot tip' — hinge at the hip, don't bend at the waist",videoUrl:"https://www.youtube.com/watch?v=Zfr6wizR8rs",videoLabel:"The BEST Single-Leg RDL Tutorial – YouTube",
+    progression:[{week:1,detail:"3×8 — choose weight you can do 12 reps with"},{week:2,detail:"3×10"},{week:3,detail:"3×12"},{week:4,detail:"3×12-15"},{week:5,detail:"2×6 @ 50% weight (deload)"}]},
+  miniLateralWalk:{id:"miniLateralWalk",name:"Mini-Band Lateral Walks",muscles:"Glute Medius, Hip Abductors",
+    golfBenefit:`Glute med controls your pelvis during rotation. Weakness here causes the hip slide and sway that robs you of power and accuracy.`,
+    howTo:["Loop a mini-band just above your knees","Stand in a slight squat — hips back, chest up","Step sideways, keeping the band taut — don't let feet come together","Keep toes pointing forward throughout","3×10 steps each direction"],
+    cue:"'Stay in the squat' — the moment you stand up, you lose the glute",videoUrl:"https://www.youtube.com/watch?v=LhByuL1h1MY",videoLabel:"Mini-Band Lateral Walk Tutorial – YouTube"},
+  pallof:{id:"pallof",name:"Half-Kneeling Pallof Press",muscles:"Core, Obliques, Anti-Rotation",
+    golfBenefit:`Teaches your core to resist rotation — the same job it has in golf when transferring power without losing spine angle.`,
+    howTo:["Set a cable or band at chest height, kneel perpendicular to anchor","Hold the handle at your chest with both hands","Press straight out in front — resist the band pulling you sideways","Hold 1-2 seconds at full extension, return to chest","The further you press, the harder it gets. 3×10 per side"],
+    cue:"'Don't rotate' — your whole job is to stay perfectly square",videoUrl:"https://www.youtube.com/watch?v=AH_QZLm_0-s",videoLabel:"Pallof Press Tutorial – YouTube"},
+  deadBug:{id:"deadBug",name:"Dead Bug",muscles:"Deep Core, Transverse Abdominis, Hip Flexors",
+    golfBenefit:`Trains your core to stabilize while limbs move independently — exactly what happens in the rotational golf swing. Great for your back.`,
+    howTo:["Lie on your back, press lower back firmly into the floor","Raise arms straight up, knees bent to 90°, shins parallel to floor","Slowly lower RIGHT arm overhead and LEFT leg toward floor simultaneously","Keep lower back pressed down — don't let it arch","Return to start, switch sides. 3 seconds each way. 3×10"],
+    cue:"'Lower back glued to the floor' — if it lifts, you've gone too far",videoUrl:"https://www.youtube.com/watch?v=bxn9FBrt4-A",videoLabel:"How to Do a Dead Bug – NASM"},
+  slBalance:{id:"slBalance",name:"Single-Leg Balance Reach",muscles:"Ankle, Knee, Hip Stabilizers, Core",
+    golfBenefit:`Golf is played on one leg at a time — this trains the stability to hold your finish and control weight shift through impact.`,
+    howTo:["Stand on one leg, slight bend in the knee","Reach the free foot forward, diagonally forward, and directly to the side","Tap the floor lightly with the toe each direction — don't shift your weight","Keep your standing knee tracking over your toes","3×5 taps per direction, per leg"],
+    cue:"'Reach, don't shift' — the standing hip should stay level",videoUrl:"https://www.youtube.com/watch?v=TsHynyV9fM0",videoLabel:"Y-Balance Single Leg Reach – YouTube"},
+  inclineBench:{id:"inclineBench",name:"Dumbbell Incline Bench Press",muscles:"Upper Chest, Front Deltoids, Triceps",
+    golfBenefit:`Horizontal pushing strength builds pressing power in the lead arm through impact. Incline angle is easier on the shoulder than flat bench.`,
+    howTo:["Set bench to 30-45° incline","Hold dumbbells at chest level, elbows at ~45° to your body (not flared)","Press up and slightly in — dumbbells come close at the top","Lower with control — 2-3 seconds down","Keep shoulder blades retracted (pulled back) throughout"],
+    cue:"'Protect your shoulders — elbows at 45°, not 90°'",videoUrl:"https://www.youtube.com/watch?v=8iPEnn-ltC8",videoLabel:"Dumbbell Incline Press Tutorial – YouTube",
+    progression:[{week:1,detail:"3×8 — choose weight you can do 12 reps with"},{week:2,detail:"3×10"},{week:3,detail:"3×12"},{week:4,detail:"3×6, 6, max reps"},{week:5,detail:"2×6 @ 50% weight (deload)"}]},
+  proneRow:{id:"proneRow",name:"Two-Arm Prone DB Row",muscles:"Lats, Rhomboids, Rear Deltoids, Biceps",
+    golfBenefit:`Pulling strength balances pressing muscles and reinforces connection through the arms in the swing. Lats are key to lag and power.`,
+    howTo:["Lie face-down on an incline bench, dumbbells hanging below","Row both dumbbells up simultaneously — lead with your elbows","Squeeze shoulder blades together at the top","Lower with control. Keep your head neutral","Superset with Incline Press — 60 sec rest after both"],
+    cue:"'Elbows to your back pockets' — not up, back",videoUrl:"https://www.youtube.com/watch?v=Wt67JHzxcEI",videoLabel:"Prone DB Row Tutorial – YouTube",
+    progression:[{week:1,detail:"3×8 — superset with Incline Press"},{week:2,detail:"3×10"},{week:3,detail:"3×12"},{week:4,detail:"3×6, 6, max reps"},{week:5,detail:"2×6 @ 50% weight (deload)"}]},
+  yOnBench:{id:"yOnBench",name:"Y's on Bench",muscles:"Lower Trapezius, Posterior Deltoid, Rotator Cuff",
+    golfBenefit:`Lower trap weakness is extremely common in golfers and contributes to shoulder impingement and poor posture. This directly fixes that.`,
+    howTo:["Lie face-down on an incline bench, arms hanging","With thumbs up, raise both arms in a Y shape — up and slightly out","Squeeze the bottom of your shoulder blades together at the top","Lower with control. Use very light weight or bodyweight","2×10 reps"],
+    cue:"'Lift from behind the shoulder blade, not the arm'",videoUrl:"https://www.youtube.com/watch?v=Rfj9LIzMQVo",videoLabel:"Y's on Bench Exercise – YouTube"},
+  facePull:{id:"facePull",name:"Face Pulls",muscles:"Rear Deltoids, External Rotators, Upper Traps",
+    golfBenefit:`Keeps the rotator cuff healthy and shoulders in proper position — critical given your shoulder history. High volume here is protective.`,
+    howTo:["Set a cable or band at head height","Grip with both hands, palms facing down","Pull toward your face — elbows flare high and wide","At the end, externally rotate — thumbs go back and down","2×12 reps. Light weight, feel the squeeze"],
+    cue:"'Pull to your forehead, elbows high' — not to your chin",videoUrl:"https://www.youtube.com/watch?v=rep-qVOkqgk",videoLabel:"Face Pulls Tutorial – YouTube"},
+  birdDog:{id:"birdDog",name:"Bird Dog",muscles:"Core, Glutes, Lower Back, Shoulder Stability",
+    golfBenefit:`Builds rotary and posterior chain stability to control your spine angle through the swing. Directly targets your back rehab goals.`,
+    howTo:["On all fours: hands under shoulders, knees under hips","Engage core — imagine balancing a glass of water on your back","Slowly extend RIGHT arm and LEFT leg simultaneously","Hold 2 seconds at full extension — hips stay level, don't rotate","Return with control. Alternate sides. 2×8"],
+    cue:"'Reach long, not high' — length, not height",videoUrl:"https://www.youtube.com/watch?v=izA0GnL99I8",videoLabel:"Bird Dog: Master Core Stability – YouTube"},
+  stabilityRollout:{id:"stabilityRollout",name:"Stability Ball Rollout",muscles:"Core, Transverse Abdominis, Hip Flexors",
+    golfBenefit:`Anti-extension core strength keeps your spine angle from changing during the swing — one of the biggest power leaks in amateur golf.`,
+    howTo:["Kneel in front of a stability ball, hands on the ball","Slowly roll forward, extending your body out — keep hips in line","Go until you feel your lower back about to arch — stop there","Contract abs and pull back to start","2×10 reps. Plank Walkout is a solid alternative"],
+    cue:"'Ribs down, hips neutral' — no sagging at the low back",videoUrl:"https://www.youtube.com/watch?v=whkNGkB2QNQ",videoLabel:"Stability Ball Rollout Tutorial – YouTube"},
+  landminePress:{id:"landminePress",name:"Half-Kneeling Landmine Press",muscles:"Shoulders, Core, Glutes, Anti-Rotation",
+    golfBenefit:`Golf-specific pressing angle. Half-kneeling forces glute activation and anti-rotation stability — exactly what your body needs to deliver the club at impact.`,
+    howTo:["Kneel on one knee (same side as pressing arm), toes tucked","Hold barbell end at shoulder height, elbow in","Squeeze glute of kneeling leg and brace core — hips don't rotate","Press bar up and forward in an arc to full extension","Control back to shoulder. Tall, upright torso throughout"],
+    cue:"'Press tall, don't lean' — torso stays perfectly vertical",videoUrl:"https://www.youtube.com/watch?v=CA6tkn3Qilc",videoLabel:"Half-Kneeling Landmine Press Tutorial – Prototype Training",
+    progression:[{week:1,detail:"3×8-10 empty bar — learn the pattern"},{week:2,detail:"Add 5-10 lb; 3×8-10"},{week:3,detail:"Add 5-10 lb; 3×8-10"},{week:4,detail:"Add 5-10 lb; 3×8-10"},{week:5,detail:"Empty bar; 2×6-8 (deload)"}]},
+  gobletSquat:{id:"gobletSquat",name:"Goblet Squat to Box",muscles:"Quads, Glutes, Core",
+    golfBenefit:`Box teaches hip sit-back and neutral spine — the same athletic base position you need throughout the swing. Goblet hold builds lat tension.`,
+    howTo:["Hold a dumbbell vertically at chest height, cupped in both hands","Stand ~12 inches in front of a bench or box","Push hips back and bend knees — sit back onto box with control","Pause briefly, drive through feet to stand","Keep chest tall, knees tracking over toes"],
+    cue:"'Sit back into a chair' — not forward onto your toes",videoUrl:"https://www.youtube.com/watch?v=yroxsbvFZ00",videoLabel:"EASY HOW TO: Goblet Box Squat – YouTube",
+    progression:[{week:1,detail:"3×8 @ ~30% bodyweight"},{week:2,detail:"3×10"},{week:3,detail:"3×12"},{week:4,detail:"3×6-8 @ ~40% bodyweight"},{week:5,detail:"2×10 @ 50% Week 4 weight (deload)"}]},
+  latPulldown:{id:"latPulldown",name:"One-Arm Half-Kneeling Lat Pulldown",muscles:"Lats, Biceps, Rear Deltoids",
+    golfBenefit:`Lat strength is directly tied to lag and connection in the downswing. Half-kneeling position adds core stability demand.`,
+    howTo:["Kneel under a high cable pulley, one knee down","Grip the cable with the arm on the same side as the down knee","Pull the cable down to your shoulder — lead with your elbow","Control back to full extension. Don't lean excessively","3×8-10 per side"],
+    cue:"'Elbow to your back pocket' — think down and back, not just down",videoUrl:"https://www.youtube.com/watch?v=PtP-Kl4YxEA",videoLabel:"Half-Kneeling Lat Pulldown Tutorial – YouTube",
+    progression:[{week:1,detail:"3×8-10 light load"},{week:2,detail:"Add 5-10 lb; 3×8-10"},{week:3,detail:"Add 5-10 lb; 3×8-10"},{week:4,detail:"Add 5-10 lb; 3×8-10"},{week:5,detail:"2×6-8 @ 50% Week 4 weight (deload)"}]}
+};
+
+const SVGKEY = {
+  wallSlides:"wallSlides",serratusWallSlides:"serratusWallSlides",hipFlexorStretch:"hipFlexorStretch",
+  hip90:"hip90",openBook:"openBook",gluteBridge:"gluteBridge",sidePlank:"sidePlank",
+  frontPlank:"frontPlank",bandPullApart:"bandPullApart",bandExtRotation:"bandPullApart",
+  catCow:"catCow",pogoJumps:"pogoJumps",lateralHops:"pogoJumpsLat",sqJumpStick:"sqJumpStick",
+  splitSquat:"splitSquat",slRdl:"slRdl",miniLateralWalk:"miniLateralWalk",pallof:"pallof",
+  deadBug:"deadBug",slBalance:"slBalance",inclineBench:"inclineBench",proneRow:"proneRow",
+  yOnBench:"yOnBench",facePull:"facePull",birdDog:"birdDog",stabilityRollout:"stabilityRollout",
+  landminePress:"landminePress",gobletSquat:"gobletSquat",latPulldown:"latPulldown"
+};
+
+const PLAN = [
+  {day:"Day 1",label:"Lower Body",color:"#2d6a4f",accent:"#52a36e",bg:"rgba(45,106,79,0.12)",sections:[
+    {title:"Warm-Up",subtitle:"After 5-10 min light cardio",items:[
+      {exId:"hipFlexorStretch",reps:"30s/side"},{exId:"hip90",reps:"8 reps/side"},{exId:"openBook",reps:"6 reps/side"},
+      {exId:"gluteBridge",reps:"10-12 reps"},{exId:"sidePlank",reps:"20-30s/side"},{exId:"frontPlank",reps:"30s"},{exId:"wallSlides",reps:"8-10 reps"}]},
+    {title:"Plyos",subtitle:"Rest 60s between sets",items:[
+      {exId:"pogoJumps",reps:"2×10"},{exId:"lateralHops",reps:"2×8 each direction"},{exId:"sqJumpStick",reps:"2×5"}]},
+    {title:"Strength Block",subtitle:"Main work — see 5-week progression",items:[
+      {exId:"splitSquat",reps:"3×8 → progressive",note:"A. Quad Dominant · Rest 120s"},
+      {exId:"slRdl",reps:"3×8 → progressive",note:"B. Hamstring Dominant · Rest 90s"}]},
+    {title:"Hip & Core Circuit",subtitle:"Minimal rest between exercises · 90s after each round",items:[
+      {exId:"miniLateralWalk",reps:"3×10 steps each way"},{exId:"pallof",reps:"3×10/side"},
+      {exId:"deadBug",reps:"3×10 (slow)"},{exId:"slBalance",reps:"3×5/leg"}]}]},
+  {day:"Day 2",label:"Upper Body",color:"#1a4971",accent:"#5a9fd4",bg:"rgba(26,73,113,0.12)",sections:[
+    {title:"Warm-Up",subtitle:"After 5-10 min light cardio",items:[
+      {exId:"wallSlides",reps:"10 reps"},{exId:"serratusWallSlides",reps:"10 reps"},
+      {exId:"bandExtRotation",reps:"12 reps"},{exId:"catCow",reps:"6 reps/side"},{exId:"bandPullApart",reps:"12 reps"}]},
+    {title:"Strength Block",subtitle:"Superset A+B · 60s rest then repeat",items:[
+      {exId:"inclineBench",reps:"3×8 → progressive",note:"A. Push — Horizontal"},
+      {exId:"proneRow",reps:"3×8 → progressive",note:"B. Pull — Superset with A"},
+      {exId:"yOnBench",reps:"2×10",note:"C. Scapular Accessory"},
+      {exId:"facePull",reps:"2×12",note:"C. Scapular Accessory"}]},
+    {title:"Core & Stability",subtitle:"Consecutive · Rest 90s after each round",items:[
+      {exId:"sidePlank",reps:"2×20s/side"},{exId:"birdDog",reps:"2×8"},{exId:"stabilityRollout",reps:"2×10"}]}]},
+  {day:"Day 3",label:"Full Body",color:"#6b3a1f",accent:"#d4905a",bg:"rgba(107,58,31,0.12)",sections:[
+    {title:"Warm-Up",subtitle:"After 10 min light cardio",items:[
+      {exId:"wallSlides",reps:"10 reps"},{exId:"serratusWallSlides",reps:"10 reps"},
+      {exId:"hip90",reps:"8 reps/side"},{exId:"catCow",reps:"6 reps/side"},
+      {exId:"hipFlexorStretch",reps:"30s/side"},{exId:"gluteBridge",reps:"10-12 reps"},
+      {exId:"sidePlank",reps:"20-30s/side"},{exId:"frontPlank",reps:"30s"},{exId:"bandPullApart",reps:"8-10 reps"}]},
+    {title:"Plyos",subtitle:"Rest 60s between sets",items:[
+      {exId:"pogoJumps",reps:"2×10"},{exId:"lateralHops",reps:"2×8 each way"},{exId:"sqJumpStick",reps:"2×5"}]},
+    {title:"Strength Block",subtitle:"Main work — see 5-week progression",items:[
+      {exId:"landminePress",reps:"3×8-10 → progressive",note:"A. Push — Scapular Focus"},
+      {exId:"gobletSquat",reps:"3×8 → progressive",note:"B. Squat Pattern"},
+      {exId:"latPulldown",reps:"3×8-10 → progressive",note:"C. Horizontal Pull"}]}]}
+];
+
+const WEEK_LABELS = ["Build","Build","Peak","Intensify","Deload"];
+
+/* ===== SVG exercise illustrations (tokens: @A2 accent-stroke, @B2 body-stroke, @A accent-color) ===== */
+const SVGT = {
+  wallSlides:`<svg viewBox="0 0 120 160" style="width:100%;height:100%"><rect x="100" y="10" width="8" height="140" fill="#1e3a26" stroke="#2d6a4f" stroke-width="1"/><text x="104" y="85" font-size="7" fill="#2d6a4f" text-anchor="middle" transform="rotate(90,104,85)">WALL</text><circle cx="55" cy="30" r="10" @B2 stroke-width="2.5"/><line x1="55" y1="40" x2="55" y2="85" @B2 stroke-width="2.5"/><line x1="55" y1="85" x2="42" y2="120" @B2 stroke-width="2.5"/><line x1="55" y1="85" x2="68" y2="120" @B2 stroke-width="2.5"/><line x1="42" y1="120" x2="40" y2="140" @B2 stroke-width="2.5"/><line x1="68" y1="120" x2="70" y2="140" @B2 stroke-width="2.5"/><line x1="55" y1="50" x2="30" y2="35" @A2 stroke-width="3"/><line x1="55" y1="50" x2="80" y2="35" @A2 stroke-width="3"/><line x1="30" y1="35" x2="25" y2="15" @A2 stroke-width="3"/><line x1="80" y1="35" x2="85" y2="15" @A2 stroke-width="3"/><line x1="20" y1="25" x2="20" y2="12" stroke="@A" stroke-width="1.5" stroke-dasharray="3,2"/><polygon points="20,8 17,15 23,15" fill="@A"/><line x1="90" y1="25" x2="90" y2="12" stroke="@A" stroke-width="1.5" stroke-dasharray="3,2"/><polygon points="90,8 87,15 93,15" fill="@A"/><text x="60" y="155" font-size="8" fill="@A" text-anchor="middle">WALL SLIDES</text></svg>`,
+  splitSquat:`<svg viewBox="0 0 140 160" style="width:100%;height:100%"><rect x="85" y="110" width="40" height="8" fill="#1e3a26" stroke="#2d6a4f" stroke-width="1.5" rx="2"/><line x1="90" y1="118" x2="90" y2="135" stroke="#2d6a4f" stroke-width="1.5"/><line x1="120" y1="118" x2="120" y2="135" stroke="#2d6a4f" stroke-width="1.5"/><circle cx="55" cy="28" r="10" @B2 stroke-width="2.5"/><line x1="55" y1="38" x2="55" y2="80" @B2 stroke-width="2.5"/><line x1="55" y1="80" x2="38" y2="110" @B2 stroke-width="2.5"/><line x1="38" y1="110" x2="35" y2="140" @B2 stroke-width="2.5"/><line x1="55" y1="80" x2="85" y2="95" @B2 stroke-width="2.5"/><line x1="85" y1="95" x2="100" y2="110" @B2 stroke-width="2.5"/><rect x="22" y="90" width="10" height="5" fill="@A" rx="1"/><rect x="73" y="90" width="10" height="5" fill="@A" rx="1"/><line x1="55" y1="55" x2="27" y2="90" @B2 stroke-width="2"/><line x1="55" y1="55" x2="78" y2="90" @B2 stroke-width="2"/><line x1="12" y1="75" x2="12" y2="100" stroke="@A" stroke-width="1.5"/><polygon points="12,105 9,98 15,98" fill="@A"/><text x="70" y="155" font-size="8" fill="@A" text-anchor="middle">SPLIT SQUAT</text></svg>`,
+  slRdl:`<svg viewBox="0 0 120 160" style="width:100%;height:100%"><circle cx="90" cy="35" r="10" @B2 stroke-width="2.5"/><line x1="90" y1="45" x2="45" y2="75" @B2 stroke-width="2.5"/><line x1="70" y1="68" x2="65" y2="110" @B2 stroke-width="2.5"/><line x1="65" y1="110" x2="62" y2="140" @B2 stroke-width="2.5"/><line x1="70" y1="68" x2="110" y2="55" @B2 stroke-width="2.5"/><line x1="110" y1="55" x2="118" y2="45" @B2 stroke-width="2.5"/><line x1="55" y1="72" x2="48" y2="100" @B2 stroke-width="2"/><rect x="42" y="100" width="10" height="5" fill="@A" rx="1"/><path d="M 78 62 Q 85 50 90 55" stroke="@A" stroke-width="1.5" fill="none" stroke-dasharray="3,2"/><text x="60" y="155" font-size="8" fill="@A" text-anchor="middle">SINGLE-LEG RDL</text></svg>`,
+  deadBug:`<svg viewBox="0 0 160 130" style="width:100%;height:100%"><line x1="10" y1="100" x2="150" y2="100" stroke="#2d6a4f" stroke-width="1.5"/><circle cx="130" cy="65" r="10" @B2 stroke-width="2.5"/><line x1="130" y1="75" x2="80" y2="85" @B2 stroke-width="2.5"/><line x1="120" y1="78" x2="145" y2="40" @A2 stroke-width="3"/><line x1="100" y1="82" x2="90" y2="50" @B2 stroke-width="2.5"/><line x1="80" y1="85" x2="50" y2="95" @A2 stroke-width="3"/><line x1="50" y1="95" x2="30" y2="90" @A2 stroke-width="3"/><line x1="80" y1="85" x2="65" y2="65" @B2 stroke-width="2.5"/><line x1="65" y1="65" x2="55" y2="75" @B2 stroke-width="2.5"/><path d="M 90 88 Q 85 95 80 88" stroke="@A" stroke-width="1.5" fill="none"/><text x="80" y="118" font-size="8" fill="@A" text-anchor="middle">DEAD BUG</text><text x="80" y="126" font-size="7" fill="#7aab8a" text-anchor="middle">Keep lower back pressed down</text></svg>`,
+  birdDog:`<svg viewBox="0 0 160 130" style="width:100%;height:100%"><line x1="10" y1="100" x2="150" y2="100" stroke="#2d6a4f" stroke-width="1.5"/><circle cx="115" cy="45" r="10" @B2 stroke-width="2.5"/><line x1="115" y1="55" x2="75" y2="65" @B2 stroke-width="2.5"/><line x1="115" y1="60" x2="148" y2="45" @A2 stroke-width="3"/><polygon points="150,44 143,40 144,48" fill="@A"/><line x1="115" y1="60" x2="110" y2="90" @B2 stroke-width="2.5"/><line x1="75" y1="65" x2="42" y2="55" @A2 stroke-width="3"/><line x1="42" y1="55" x2="25" y2="52" @A2 stroke-width="3"/><polygon points="23,51 30,47 30,55" fill="@A"/><line x1="75" y1="65" x2="78" y2="90" @B2 stroke-width="2.5"/><line x1="40" y1="65" x2="115" y2="65" stroke="@A" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/><text x="80" y="115" font-size="8" fill="@A" text-anchor="middle">BIRD DOG</text><text x="80" y="123" font-size="7" fill="#7aab8a" text-anchor="middle">Reach long — hips stay level</text></svg>`,
+  gobletSquat:`<svg viewBox="0 0 130 160" style="width:100%;height:100%"><rect x="30" y="120" width="70" height="12" fill="#1e3a26" stroke="#2d6a4f" stroke-width="1.5" rx="2"/><circle cx="65" cy="30" r="10" @B2 stroke-width="2.5"/><line x1="65" y1="40" x2="65" y2="85" @B2 stroke-width="2.5"/><line x1="65" y1="85" x2="42" y2="108" @B2 stroke-width="2.5"/><line x1="65" y1="85" x2="88" y2="108" @B2 stroke-width="2.5"/><line x1="42" y1="108" x2="36" y2="120" @B2 stroke-width="2.5"/><line x1="88" y1="108" x2="94" y2="120" @B2 stroke-width="2.5"/><rect x="54" y="55" width="22" height="10" fill="@A" rx="2"/><rect x="52" y="57" width="4" height="6" fill="@A" rx="1"/><rect x="74" y="57" width="4" height="6" fill="@A" rx="1"/><line x1="65" y1="50" x2="56" y2="60" @B2 stroke-width="2"/><line x1="65" y1="50" x2="74" y2="60" @B2 stroke-width="2"/><line x1="15" y1="80" x2="15" y2="105" stroke="@A" stroke-width="1.5"/><polygon points="15,110 12,103 18,103" fill="@A"/><text x="65" y="150" font-size="8" fill="@A" text-anchor="middle">GOBLET SQUAT TO BOX</text></svg>`,
+  landminePress:`<svg viewBox="0 0 140 160" style="width:100%;height:100%"><circle cx="15" cy="140" r="8" fill="#1e3a26" stroke="#2d6a4f" stroke-width="2"/><line x1="23" y1="134" x2="85" y2="60" stroke="#a0c8a8" stroke-width="4" stroke-linecap="round"/><circle cx="85" cy="32" r="10" @B2 stroke-width="2.5"/><line x1="85" y1="42" x2="85" y2="90" @B2 stroke-width="2.5"/><line x1="85" y1="90" x2="85" y2="130" @B2 stroke-width="2.5"/><ellipse cx="85" cy="133" rx="10" ry="4" fill="#2d6a4f" opacity="0.5"/><line x1="85" y1="90" x2="55" y2="90" @B2 stroke-width="2.5"/><line x1="55" y1="90" x2="50" y2="115" @B2 stroke-width="2.5"/><line x1="50" y1="115" x2="42" y2="116" @B2 stroke-width="2"/><line x1="85" y1="60" x2="85" y2="55" @A2 stroke-width="3"/><line x1="85" y1="55" x2="110" y2="42" @A2 stroke-width="3"/><line x1="110" y1="42" x2="120" y2="30" stroke="@A" stroke-width="1.5" stroke-dasharray="3,2"/><polygon points="122,27 116,32 121,36" fill="@A"/><text x="70" y="155" font-size="8" fill="@A" text-anchor="middle">LANDMINE PRESS</text></svg>`,
+  inclineBench:`<svg viewBox="0 0 160 140" style="width:100%;height:100%"><line x1="20" y1="95" x2="100" y2="70" stroke="#2d6a4f" stroke-width="6" stroke-linecap="round"/><line x1="20" y1="95" x2="20" y2="115" stroke="#2d6a4f" stroke-width="3"/><line x1="100" y1="70" x2="100" y2="90" stroke="#2d6a4f" stroke-width="3"/><circle cx="95" cy="52" r="9" @B2 stroke-width="2.5"/><line x1="95" y1="61" x2="42" y2="82" @B2 stroke-width="2.5"/><line x1="80" y1="68" x2="70" y2="40" @A2 stroke-width="3"/><line x1="60" y1="75" x2="68" y2="40" @A2 stroke-width="3"/><rect x="62" y="33" width="14" height="7" fill="@A" rx="2"/><rect x="60" y="35" width="3" height="4" fill="@A" rx="1"/><rect x="76" y="35" width="3" height="4" fill="@A" rx="1"/><line x1="42" y1="82" x2="28" y2="94" @B2 stroke-width="2.5"/><line x1="28" y1="94" x2="22" y2="94" @B2 stroke-width="2"/><line x1="69" y1="25" x2="69" y2="15" stroke="@A" stroke-width="1.5"/><polygon points="69,11 66,18 72,18" fill="@A"/><text x="80" y="130" font-size="8" fill="@A" text-anchor="middle">INCLINE DB PRESS</text></svg>`,
+  proneRow:`<svg viewBox="0 0 160 140" style="width:100%;height:100%"><line x1="20" y1="90" x2="110" y2="65" stroke="#2d6a4f" stroke-width="6" stroke-linecap="round"/><line x1="20" y1="90" x2="20" y2="110" stroke="#2d6a4f" stroke-width="3"/><line x1="110" y1="65" x2="110" y2="85" stroke="#2d6a4f" stroke-width="3"/><circle cx="105" cy="48" r="9" @B2 stroke-width="2.5"/><line x1="105" y1="57" x2="45" y2="77" @B2 stroke-width="2.5"/><line x1="85" y1="65" x2="75" y2="52" @A2 stroke-width="3"/><line x1="55" y1="73" x2="60" y2="58" @A2 stroke-width="3"/><rect x="68" y="46" width="10" height="6" fill="@A" rx="1"/><rect x="53" y="52" width="10" height="6" fill="@A" rx="1"/><line x1="45" y1="77" x2="30" y2="88" @B2 stroke-width="2.5"/><line x1="30" y1="88" x2="22" y2="88" @B2 stroke-width="2"/><line x1="75" y1="52" x2="82" y2="44" stroke="@A" stroke-width="1.5" stroke-dasharray="3,2"/><polygon points="84,42 78,43 81,49" fill="@A"/><text x="80" y="125" font-size="8" fill="@A" text-anchor="middle">PRONE DB ROW</text><text x="80" y="133" font-size="7" fill="#7aab8a" text-anchor="middle">Elbows back, squeeze shoulder blades</text></svg>`,
+  pallof:`<svg viewBox="0 0 140 160" style="width:100%;height:100%"><rect x="5" y="55" width="8" height="20" fill="#1e3a26" stroke="#2d6a4f" stroke-width="1.5" rx="1"/><line x1="13" y1="65" x2="60" y2="68" stroke="#a0c8a8" stroke-width="2" stroke-dasharray="4,2"/><circle cx="85" cy="30" r="10" @B2 stroke-width="2.5"/><line x1="85" y1="40" x2="85" y2="85" @B2 stroke-width="2.5"/><line x1="85" y1="85" x2="85" y2="125" @B2 stroke-width="2.5"/><ellipse cx="85" cy="128" rx="10" ry="4" fill="#2d6a4f" opacity="0.5"/><line x1="85" y1="85" x2="58" y2="85" @B2 stroke-width="2.5"/><line x1="58" y1="85" x2="54" y2="110" @B2 stroke-width="2.5"/><line x1="54" y1="110" x2="46" y2="112" @B2 stroke-width="2"/><line x1="85" y1="60" x2="60" y2="65" @A2 stroke-width="3"/><line x1="85" y1="60" x2="60" y2="72" @A2 stroke-width="3"/><rect x="55" y="62" width="8" height="12" fill="@A" rx="2" opacity="0.7"/><line x1="45" y1="68" x2="30" y2="68" stroke="@A" stroke-width="1.5" stroke-dasharray="3,2"/><text x="25" y="63" font-size="6" fill="@A">resist</text><text x="70" y="150" font-size="8" fill="@A" text-anchor="middle">PALLOF PRESS</text></svg>`,
+  gluteBridge:`<svg viewBox="0 0 160 140" style="width:100%;height:100%"><line x1="10" y1="115" x2="150" y2="115" stroke="#2d6a4f" stroke-width="1.5"/><circle cx="130" cy="68" r="9" @B2 stroke-width="2.5"/><line x1="130" y1="77" x2="95" y2="90" @B2 stroke-width="2.5"/><line x1="95" y1="90" x2="75" y2="110" @B2 stroke-width="2.5"/><line x1="95" y1="90" x2="80" y2="75" @B2 stroke-width="2.5"/><line x1="80" y1="75" x2="55" y2="85" @B2 stroke-width="2.5"/><line x1="55" y1="85" x2="48" y2="110" @B2 stroke-width="2.5"/><ellipse cx="85" cy="83" rx="20" ry="6" fill="none" stroke="@A" stroke-width="2" stroke-dasharray="4,2"/><line x1="70" y1="78" x2="62" y2="70" stroke="@A" stroke-width="1.5"/><polygon points="60,68 64,74 68,70" fill="@A"/><line x1="100" y1="88" x2="108" y2="80" stroke="@A" stroke-width="1.5"/><polygon points="110,78 106,84 112,86" fill="@A"/><line x1="85" y1="72" x2="85" y2="58" stroke="@A" stroke-width="1.5"/><polygon points="85,54 82,61 88,61" fill="@A"/><text x="80" y="130" font-size="8" fill="@A" text-anchor="middle">GLUTE BRIDGE + BAND</text></svg>`,
+  facePull:`<svg viewBox="0 0 140 160" style="width:100%;height:100%"><rect x="127" y="55" width="8" height="20" fill="#1e3a26" stroke="#2d6a4f" stroke-width="1.5" rx="1"/><line x1="127" y1="65" x2="90" y2="65" stroke="#a0c8a8" stroke-width="2" stroke-dasharray="4,2"/><circle cx="50" cy="40" r="10" @B2 stroke-width="2.5"/><line x1="50" y1="50" x2="50" y2="100" @B2 stroke-width="2.5"/><line x1="50" y1="100" x2="35" y2="135" @B2 stroke-width="2.5"/><line x1="50" y1="100" x2="65" y2="135" @B2 stroke-width="2.5"/><line x1="35" y1="135" x2="30" y2="148" @B2 stroke-width="2"/><line x1="65" y1="135" x2="70" y2="148" @B2 stroke-width="2"/><line x1="50" y1="65" x2="30" y2="45" @A2 stroke-width="3"/><line x1="30" y1="45" x2="60" y2="58" @A2 stroke-width="3"/><line x1="50" y1="65" x2="70" y2="45" @A2 stroke-width="3"/><line x1="70" y1="45" x2="60" y2="58" @A2 stroke-width="3"/><circle cx="55" cy="40" r="4" fill="@A" opacity="0.4"/><line x1="28" y1="45" x2="22" y2="38" stroke="@A" stroke-width="1.5"/><polygon points="20,36 24,42 28,38" fill="@A"/><line x1="72" y1="45" x2="78" y2="38" stroke="@A" stroke-width="1.5"/><polygon points="80,36 76,42 80,38" fill="@A"/><text x="70" y="157" font-size="8" fill="@A" text-anchor="middle">FACE PULLS</text></svg>`,
+  sidePlank:`<svg viewBox="0 0 160 130" style="width:100%;height:100%"><line x1="10" y1="105" x2="150" y2="105" stroke="#2d6a4f" stroke-width="1.5"/><circle cx="130" cy="55" r="9" @B2 stroke-width="2.5"/><line x1="130" y1="64" x2="35" y2="100" @B2 stroke-width="3"/><line x1="35" y1="100" x2="45" y2="105" stroke="#a0c8a8" stroke-width="3" stroke-linecap="round"/><line x1="95" y1="82" x2="95" y2="62" @A2 stroke-width="2.5"/><line x1="35" y1="100" x2="130" y2="64" stroke="@A" stroke-width="1" stroke-dasharray="4,3" opacity="0.4"/><line x1="82" y1="85" x2="82" y2="72" stroke="@A" stroke-width="1.5"/><polygon points="82,68 79,75 85,75" fill="@A"/><text x="80" y="120" font-size="8" fill="@A" text-anchor="middle">SIDE PLANK</text><text x="80" y="128" font-size="7" fill="#7aab8a" text-anchor="middle">Keep hips up — straight line</text></svg>`,
+  bandPullApart:`<svg viewBox="0 0 160 140" style="width:100%;height:100%"><circle cx="80" cy="30" r="10" @B2 stroke-width="2.5"/><line x1="80" y1="40" x2="80" y2="90" @B2 stroke-width="2.5"/><line x1="80" y1="90" x2="65" y2="125" @B2 stroke-width="2.5"/><line x1="80" y1="90" x2="95" y2="125" @B2 stroke-width="2.5"/><line x1="80" y1="58" x2="25" y2="65" @B2 stroke-width="2.5"/><line x1="80" y1="58" x2="135" y2="65" @B2 stroke-width="2.5"/><path d="M 30 65 Q 80 72 130 65" stroke="@A" stroke-width="2.5" fill="none"/><circle cx="27" cy="65" r="4" fill="@A" opacity="0.7"/><circle cx="133" cy="65" r="4" fill="@A" opacity="0.7"/><line x1="22" y1="65" x2="10" y2="65" stroke="@A" stroke-width="2"/><polygon points="8,65 14,62 14,68" fill="@A"/><line x1="138" y1="65" x2="150" y2="65" stroke="@A" stroke-width="2"/><polygon points="152,65 146,62 146,68" fill="@A"/><text x="80" y="130" font-size="8" fill="@A" text-anchor="middle">BAND PULL-APARTS</text></svg>`,
+  hipFlexorStretch:`<svg viewBox="0 0 130 160" style="width:100%;height:100%"><line x1="10" y1="140" x2="120" y2="140" stroke="#2d6a4f" stroke-width="1.5"/><circle cx="65" cy="28" r="10" @B2 stroke-width="2.5"/><line x1="65" y1="38" x2="65" y2="85" @B2 stroke-width="2.5"/><line x1="65" y1="85" x2="45" y2="85" @B2 stroke-width="2.5"/><line x1="45" y1="85" x2="38" y2="112" @B2 stroke-width="2.5"/><line x1="38" y1="112" x2="30" y2="115" @B2 stroke-width="2"/><line x1="65" y1="85" x2="90" y2="112" @B2 stroke-width="2.5"/><ellipse cx="90" cy="115" rx="12" ry="4" fill="#2d6a4f" opacity="0.5"/><line x1="65" y1="55" x2="48" y2="48" @B2 stroke-width="2"/><line x1="65" y1="55" x2="78" y2="42" @A2 stroke-width="2.5"/><line x1="80" y1="90" x2="68" y2="90" stroke="@A" stroke-width="1.5"/><polygon points="65,90 71,87 71,93" fill="@A"/><text x="65" y="155" font-size="8" fill="@A" text-anchor="middle">HIP FLEXOR STRETCH</text></svg>`,
+  openBook:`<svg viewBox="0 0 160 130" style="width:100%;height:100%"><line x1="10" y1="110" x2="150" y2="110" stroke="#2d6a4f" stroke-width="1.5"/><circle cx="130" cy="58" r="9" @B2 stroke-width="2.5"/><line x1="130" y1="67" x2="55" y2="85" @B2 stroke-width="3"/><line x1="55" y1="85" x2="50" y2="108" @B2 stroke-width="2.5"/><line x1="50" y1="108" x2="35" y2="110" @B2 stroke-width="2.5"/><line x1="55" y1="85" x2="62" y2="108" @B2 stroke-width="2.5"/><line x1="62" y1="108" x2="45" y2="110" @B2 stroke-width="2.5"/><line x1="100" y1="77" x2="80" y2="70" @B2 stroke-width="2"/><line x1="100" y1="77" x2="120" y2="55" @A2 stroke-width="3"/><path d="M 90 68 Q 110 55 118 60" stroke="@A" stroke-width="1.5" fill="none" stroke-dasharray="3,2"/><polygon points="120,58 114,56 116,62" fill="@A"/><text x="80" y="124" font-size="8" fill="@A" text-anchor="middle">OPEN BOOK ROTATION</text></svg>`,
+  latPulldown:`<svg viewBox="0 0 140 160" style="width:100%;height:100%"><circle cx="100" cy="12" r="6" fill="#1e3a26" stroke="#2d6a4f" stroke-width="1.5"/><line x1="100" y1="18" x2="85" y2="60" stroke="#a0c8a8" stroke-width="2" stroke-dasharray="4,2"/><circle cx="65" cy="35" r="10" @B2 stroke-width="2.5"/><line x1="65" y1="45" x2="65" y2="92" @B2 stroke-width="2.5"/><line x1="65" y1="92" x2="65" y2="130" @B2 stroke-width="2.5"/><ellipse cx="65" cy="133" rx="10" ry="4" fill="#2d6a4f" opacity="0.5"/><line x1="65" y1="92" x2="38" y2="92" @B2 stroke-width="2.5"/><line x1="38" y1="92" x2="33" y2="115" @B2 stroke-width="2.5"/><line x1="65" y1="58" x2="85" y2="45" @A2 stroke-width="3"/><line x1="85" y1="45" x2="88" y2="30" @A2 stroke-width="2.5"/><line x1="65" y1="58" x2="48" y2="70" @B2 stroke-width="2"/><line x1="88" y1="30" x2="85" y2="45" stroke="@A" stroke-width="1.5"/><line x1="85" y1="45" x2="82" y2="62" stroke="@A" stroke-width="1.5" stroke-dasharray="3,2"/><polygon points="81,65 78,58 84,59" fill="@A"/><text x="70" y="150" font-size="8" fill="@A" text-anchor="middle">HALF-KNEELING</text><text x="70" y="158" font-size="8" fill="@A" text-anchor="middle">LAT PULLDOWN</text></svg>`,
+  pogoJumps:`<svg viewBox="0 0 120 160" style="width:100%;height:100%"><line x1="10" y1="140" x2="110" y2="140" stroke="#2d6a4f" stroke-width="1.5"/><circle cx="60" cy="28" r="10" @B2 stroke-width="2.5"/><line x1="60" y1="38" x2="60" y2="82" @B2 stroke-width="2.5"/><line x1="60" y1="82" x2="45" y2="110" @B2 stroke-width="2.5"/><line x1="60" y1="82" x2="75" y2="110" @B2 stroke-width="2.5"/><line x1="45" y1="110" x2="40" y2="128" @B2 stroke-width="2.5"/><line x1="40" y1="128" x2="35" y2="130" @B2 stroke-width="2"/><line x1="75" y1="110" x2="80" y2="128" @B2 stroke-width="2.5"/><line x1="80" y1="128" x2="85" y2="130" @B2 stroke-width="2"/><line x1="60" y1="55" x2="40" y2="70" @B2 stroke-width="2"/><line x1="60" y1="55" x2="80" y2="70" @B2 stroke-width="2"/><line x1="15" y1="100" x2="15" y2="72" stroke="@A" stroke-width="1.5"/><polygon points="15,68 12,75 18,75" fill="@A"/><line x1="15" y1="120" x2="15" y2="140" stroke="@A" stroke-width="1.5" stroke-dasharray="3,2"/><text x="60" y="152" font-size="8" fill="@A" text-anchor="middle">POGO JUMPS</text></svg>`,
+  frontPlank:`<svg viewBox="0 0 160 120" style="width:100%;height:100%"><line x1="10" y1="100" x2="150" y2="100" stroke="#2d6a4f" stroke-width="1.5"/><circle cx="130" cy="52" r="9" @B2 stroke-width="2.5"/><line x1="130" y1="61" x2="30" y2="88" @B2 stroke-width="3"/><line x1="30" y1="88" x2="45" y2="98" stroke="#a0c8a8" stroke-width="3" stroke-linecap="round"/><line x1="100" y1="78" x2="112" y2="98" stroke="#a0c8a8" stroke-width="3" stroke-linecap="round"/><line x1="30" y1="88" x2="18" y2="98" stroke="#a0c8a8" stroke-width="2.5" stroke-linecap="round"/><line x1="20" y1="92" x2="130" y2="57" stroke="@A" stroke-width="1" stroke-dasharray="5,3" opacity="0.4"/><text x="80" y="112" font-size="8" fill="@A" text-anchor="middle">FRONT PLANK — hold 30s</text></svg>`,
+  serratusWallSlides:`<svg viewBox="0 0 120 160" style="width:100%;height:100%"><rect x="100" y="10" width="8" height="140" fill="#1e3a26" stroke="#2d6a4f" stroke-width="1"/><ellipse cx="82" cy="65" rx="6" ry="18" fill="#1e3a26" stroke="@A" stroke-width="1.5"/><circle cx="50" cy="30" r="10" @B2 stroke-width="2.5"/><line x1="50" y1="40" x2="60" y2="85" @B2 stroke-width="2.5"/><line x1="60" y1="85" x2="48" y2="120" @B2 stroke-width="2.5"/><line x1="60" y1="85" x2="72" y2="118" @B2 stroke-width="2.5"/><line x1="48" y1="120" x2="45" y2="140" @B2 stroke-width="2"/><line x1="72" y1="118" x2="74" y2="140" @B2 stroke-width="2"/><line x1="60" y1="55" x2="80" y2="50" @A2 stroke-width="3"/><line x1="60" y1="75" x2="80" y2="80" @A2 stroke-width="3"/><line x1="20" y1="50" x2="20" y2="30" stroke="@A" stroke-width="1.5" stroke-dasharray="3,2"/><polygon points="20,26 17,33 23,33" fill="@A"/><text x="55" y="155" font-size="7" fill="@A" text-anchor="middle">SERRATUS SLIDES</text></svg>`,
+  miniLateralWalk:`<svg viewBox="0 0 160 160" style="width:100%;height:100%"><line x1="10" y1="140" x2="150" y2="140" stroke="#2d6a4f" stroke-width="1.5"/><circle cx="80" cy="30" r="10" @B2 stroke-width="2.5"/><line x1="80" y1="40" x2="80" y2="82" @B2 stroke-width="2.5"/><line x1="80" y1="82" x2="50" y2="105" @B2 stroke-width="2.5"/><line x1="80" y1="82" x2="110" y2="105" @B2 stroke-width="2.5"/><line x1="50" y1="105" x2="44" y2="135" @B2 stroke-width="2.5"/><line x1="110" y1="105" x2="116" y2="135" @B2 stroke-width="2.5"/><path d="M 48 108 Q 80 118 112 108" stroke="@A" stroke-width="2.5" fill="none"/><line x1="80" y1="55" x2="58" y2="75" @B2 stroke-width="2"/><line x1="80" y1="55" x2="102" y2="75" @B2 stroke-width="2"/><line x1="20" y1="120" x2="8" y2="120" stroke="@A" stroke-width="2"/><polygon points="6,120 12,117 12,123" fill="@A"/><line x1="140" y1="120" x2="152" y2="120" stroke="@A" stroke-width="2"/><polygon points="154,120 148,117 148,123" fill="@A"/><text x="80" y="152" font-size="8" fill="@A" text-anchor="middle">MINI-BAND LATERAL WALK</text></svg>`,
+  stabilityRollout:`<svg viewBox="0 0 160 140" style="width:100%;height:100%"><line x1="10" y1="125" x2="150" y2="125" stroke="#2d6a4f" stroke-width="1.5"/><circle cx="95" cy="85" r="28" fill="#1a3a26" stroke="#2d6a4f" stroke-width="1.5"/><circle cx="130" cy="52" r="9" @B2 stroke-width="2.5"/><line x1="130" y1="61" x2="95" y2="75" @B2 stroke-width="2.5"/><line x1="95" y1="75" x2="68" y2="68" @A2 stroke-width="3"/><line x1="95" y1="75" x2="75" y2="108" @B2 stroke-width="2.5"/><ellipse cx="72" cy="112" rx="8" ry="3" fill="#2d6a4f" opacity="0.5"/><line x1="60" y1="62" x2="45" y2="58" stroke="@A" stroke-width="1.5" stroke-dasharray="3,2"/><polygon points="43,57 49,54 50,60" fill="@A"/><line x1="68" y1="68" x2="95" y2="75" stroke="@A" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/><text x="80" y="136" font-size="8" fill="@A" text-anchor="middle">STABILITY BALL ROLLOUT</text></svg>`,
+  slBalance:`<svg viewBox="0 0 120 160" style="width:100%;height:100%"><line x1="10" y1="145" x2="110" y2="145" stroke="#2d6a4f" stroke-width="1.5"/><circle cx="60" cy="28" r="10" @B2 stroke-width="2.5"/><line x1="60" y1="38" x2="60" y2="85" @B2 stroke-width="2.5"/><line x1="60" y1="85" x2="55" y2="118" @B2 stroke-width="2.5"/><line x1="55" y1="118" x2="50" y2="140" @B2 stroke-width="2.5"/><line x1="50" y1="140" x2="42" y2="142" @B2 stroke-width="2"/><line x1="60" y1="85" x2="80" y2="110" @A2 stroke-width="3"/><line x1="80" y1="110" x2="88" y2="138" @A2 stroke-width="2.5"/><circle cx="90" cy="140" r="3" fill="@A" opacity="0.7"/><line x1="60" y1="58" x2="38" y2="70" @B2 stroke-width="2"/><line x1="60" y1="58" x2="82" y2="70" @B2 stroke-width="2"/><line x1="88" y1="138" x2="95" y2="132" stroke="@A" stroke-width="1.5" stroke-dasharray="3,2"/><text x="60" y="156" font-size="8" fill="@A" text-anchor="middle">SINGLE-LEG REACH</text></svg>`,
+  hip90:`<svg viewBox="0 0 140 150" style="width:100%;height:100%"><line x1="10" y1="125" x2="130" y2="125" stroke="#2d6a4f" stroke-width="1.5"/><circle cx="85" cy="30" r="10" @B2 stroke-width="2.5"/><line x1="85" y1="40" x2="80" y2="85" @B2 stroke-width="2.5"/><line x1="80" y1="85" x2="45" y2="90" @B2 stroke-width="2.5"/><line x1="45" y1="90" x2="40" y2="122" @B2 stroke-width="2.5"/><line x1="80" y1="85" x2="110" y2="95" @B2 stroke-width="2.5"/><line x1="110" y1="95" x2="120" y2="118" @B2 stroke-width="2.5"/><line x1="80" y1="65" x2="60" y2="80" @B2 stroke-width="2"/><line x1="80" y1="65" x2="100" y2="78" @B2 stroke-width="2"/><path d="M 68 92 Q 75 105 85 98" stroke="@A" stroke-width="2" fill="none"/><polygon points="87,97 82,92 80,98" fill="@A"/><text x="70" y="138" font-size="8" fill="@A" text-anchor="middle">90/90 HIP ROTATION</text></svg>`,
+  catCow:`<svg viewBox="0 0 160 130" style="width:100%;height:100%"><line x1="10" y1="112" x2="150" y2="112" stroke="#2d6a4f" stroke-width="1.5"/><circle cx="125" cy="48" r="8" @B2 stroke-width="2" opacity="0.5"/><path d="M 30 90 Q 80 55 125 56" stroke="#7aab8a" stroke-width="2.5" fill="none" opacity="0.5"/><text x="80" y="48" font-size="7" fill="#7aab8a" text-anchor="middle" opacity="0.7">CAT (exhale)</text><circle cx="120" cy="62" r="9" @B2 stroke-width="2.5"/><path d="M 28 95 Q 75 80 120 70" stroke="#d4edda" stroke-width="3" fill="none"/><line x1="28" y1="95" x2="22" y2="110" stroke="#a0c8a8" stroke-width="2.5"/><line x1="75" y1="80" x2="75" y2="110" stroke="#a0c8a8" stroke-width="2.5"/><line x1="28" y1="95" x2="35" y2="110" stroke="#a0c8a8" stroke-width="2.5"/><line x1="75" y1="65" x2="75" y2="50" stroke="@A" stroke-width="1.5"/><polygon points="75,46 72,53 78,53" fill="@A"/><line x1="75" y1="82" x2="75" y2="96" stroke="@A" stroke-width="1.5" stroke-dasharray="3,2"/><polygon points="75,100 72,93 78,93" fill="@A"/><text x="80" y="123" font-size="8" fill="@A" text-anchor="middle">CAT-COW + T-SPINE</text></svg>`,
+  yOnBench:`<svg viewBox="0 0 160 140" style="width:100%;height:100%"><line x1="20" y1="85" x2="110" y2="65" stroke="#2d6a4f" stroke-width="6" stroke-linecap="round"/><line x1="20" y1="85" x2="20" y2="105" stroke="#2d6a4f" stroke-width="3"/><line x1="110" y1="65" x2="110" y2="85" stroke="#2d6a4f" stroke-width="3"/><circle cx="105" cy="48" r="9" @B2 stroke-width="2.5"/><line x1="105" y1="57" x2="45" y2="77" @B2 stroke-width="2.5"/><line x1="45" y1="77" x2="30" y2="87" @B2 stroke-width="2.5"/><line x1="90" y1="62" x2="70" y2="38" @A2 stroke-width="3"/><line x1="70" y1="62" x2="55" y2="36" @A2 stroke-width="3"/><circle cx="68" cy="36" r="3" fill="@A" opacity="0.6"/><circle cx="53" cy="34" r="3" fill="@A" opacity="0.6"/><text x="62" y="28" font-size="14" fill="@A" text-anchor="middle" font-weight="bold">Y</text><text x="80" y="120" font-size="8" fill="@A" text-anchor="middle">Y'S ON BENCH</text><text x="80" y="128" font-size="7" fill="#7aab8a" text-anchor="middle">Lower trapezius — go light</text></svg>`,
+  pogoJumpsLat:`<svg viewBox="0 0 160 150" style="width:100%;height:100%"><line x1="10" y1="130" x2="150" y2="130" stroke="#2d6a4f" stroke-width="1.5"/><line x1="80" y1="115" x2="80" y2="130" stroke="@A" stroke-width="1.5" stroke-dasharray="3,2"/><circle cx="42" cy="42" r="9" @B2 stroke-width="2.5" opacity="0.5"/><line x1="42" y1="51" x2="42" y2="88" @B2 stroke-width="2" opacity="0.5"/><line x1="42" y1="88" x2="30" y2="110" @B2 stroke-width="2" opacity="0.5"/><line x1="42" y1="88" x2="55" y2="110" @B2 stroke-width="2" opacity="0.5"/><circle cx="118" cy="38" r="9" @B2 stroke-width="2.5"/><line x1="118" y1="47" x2="118" y2="88" @B2 stroke-width="2.5"/><line x1="118" y1="88" x2="105" y2="112" @B2 stroke-width="2.5"/><line x1="118" y1="88" x2="130" y2="112" @B2 stroke-width="2.5"/><line x1="105" y1="112" x2="100" y2="128" @B2 stroke-width="2"/><line x1="130" y1="112" x2="135" y2="128" @B2 stroke-width="2"/><line x1="118" y1="60" x2="98" y2="70" @B2 stroke-width="2"/><line x1="118" y1="60" x2="138" y2="70" @B2 stroke-width="2"/><line x1="50" y1="75" x2="105" y2="75" stroke="@A" stroke-width="2"/><polygon points="108,75 102,72 102,78" fill="@A"/><polygon points="47,75 53,72 53,78" fill="@A"/><text x="80" y="143" font-size="8" fill="@A" text-anchor="middle">LATERAL LINE HOPS</text></svg>`,
+  sqJumpStick:`<svg viewBox="0 0 140 160" style="width:100%;height:100%"><line x1="10" y1="145" x2="130" y2="145" stroke="#2d6a4f" stroke-width="1.5"/><circle cx="42" cy="28" r="9" @B2 stroke-width="2" opacity="0.5"/><line x1="42" y1="37" x2="42" y2="78" @B2 stroke-width="2" opacity="0.5"/><line x1="42" y1="78" x2="30" y2="95" @B2 stroke-width="2" opacity="0.5"/><line x1="42" y1="78" x2="54" y2="95" @B2 stroke-width="2" opacity="0.5"/><circle cx="98" cy="42" r="9" @B2 stroke-width="2.5"/><line x1="98" y1="51" x2="98" y2="95" @B2 stroke-width="2.5"/><line x1="98" y1="95" x2="78" y2="120" @B2 stroke-width="2.5"/><line x1="98" y1="95" x2="118" y2="120" @B2 stroke-width="2.5"/><line x1="78" y1="120" x2="72" y2="143" @B2 stroke-width="2.5"/><line x1="118" y1="120" x2="124" y2="143" @B2 stroke-width="2.5"/><line x1="98" y1="68" x2="78" y2="80" @B2 stroke-width="2"/><line x1="98" y1="68" x2="118" y2="80" @B2 stroke-width="2"/><text x="115" y="60" font-size="7" fill="@A">HOLD</text><text x="115" y="68" font-size="7" fill="@A">2 sec</text><line x1="55" y1="60" x2="78" y2="45" stroke="@A" stroke-width="1.5"/><polygon points="80,43 74,46 76,52" fill="@A"/><text x="70" y="156" font-size="8" fill="@A" text-anchor="middle">SQUAT JUMP TO STICK</text></svg>`
+};
+function renderSVG(tmpl,a){return tmpl.replace(/@A2/g,'stroke="'+a+'" fill="none" stroke-linecap="round" stroke-linejoin="round"').replace(/@B2/g,'stroke="#d4edda" fill="none" stroke-linecap="round" stroke-linejoin="round"').replace(/@A/g,a);}
+function svgFor(exId,accent){var k=SVGKEY[exId]||exId;var t=SVGT[k];if(!t)return '<svg viewBox="0 0 120 120" style="width:100%;height:100%"><circle cx="60" cy="60" r="40" fill="none" stroke="#2d6a4f" stroke-width="1.5"/><text x="60" y="64" font-size="9" fill="#52a36e" text-anchor="middle">Exercise</text></svg>';return renderSVG(t,accent);}
+
+/* ============================ STATE ============================ */
+const LS_KEY = "golfProgram.v1";
+function load(){
+  try{ const r = JSON.parse(localStorage.getItem(LS_KEY)); if(r&&typeof r==="object") return Object.assign(defaultState(),r); }catch(e){}
+  return defaultState();
+}
+function defaultState(){ return { week:1, logs:{}, sessions:[], settings:{vibrate:true,sound:true,hideInstall:false}, started:null }; }
+let S = load();
+function save(){ try{ localStorage.setItem(LS_KEY, JSON.stringify(S)); }catch(e){} }
+
+/* ===== keys & logs ===== */
+function lk(week,day,exId){ return week+"|"+day+"|"+exId; }
+function targetText(exId,item,week){
+  const ex=EX[exId];
+  if(ex&&ex.progression){ const p=ex.progression.find(p=>p.week===week); if(p) return p.detail; }
+  return item?item.reps:"";
+}
+function parseSetCount(str){ const m=String(str).match(/(\d+)\s*[×x]/); return m?Math.max(1,Math.min(8,+m[1])):1; }
+function parseRepGuess(str){ const m=String(str).match(/[×x]\s*(\d+)/); return m?m[1]:""; }
+function isTimed(reps){ return /\d+\s*-?\s*\d*\s*s(ec)?(\b|\/|$)/i.test(String(reps))||/hold/i.test(String(reps)); }
+function parseSeconds(str){ const m=String(str).match(/(\d+)\s*(?:-\s*(\d+))?\s*s/i); if(!m)return 30; return m[2]?+m[2]:+m[1]; }
+function parseRest(item,section){
+  if(item&&item.note){ const m=item.note.match(/(\d+)\s*s/i); if(m)return +m[1]; }
+  if(section&&section.subtitle){ const m=section.subtitle.match(/(\d+)\s*s/); if(m)return +m[1]; }
+  return 60;
+}
+function getLog(week,day,exId,targetStr){
+  const k=lk(week,day,exId);
+  if(!S.logs[k]){ const n=parseSetCount(targetStr); const sets=[]; for(let i=0;i<n;i++) sets.push({w:"",r:"",done:false}); S.logs[k]={sets:sets}; }
+  return S.logs[k];
+}
+function buildExList(dayIdx){ const seen={},list=[]; PLAN[dayIdx].sections.forEach(s=>s.items.forEach(i=>{ if(!seen[i.exId]){seen[i.exId]=1;list.push(i.exId);} })); return list; }
+function exItem(dayIdx,exId){ let found=null; PLAN[dayIdx].sections.forEach(s=>s.items.forEach(i=>{ if(i.exId===exId&&!found) found=i; })); return found; }
+
+/* ===== completion / stats ===== */
+function exDone(week,day,exId){ const l=S.logs[lk(week,day,exId)]; return !!(l&&l.sets.some(s=>s.done)); }
+function dayDoneCount(week,day){ return buildExList(day).filter(e=>exDone(week,day,e)).length; }
+function dayTotal(day){ return buildExList(day).length; }
+function dayCompleted(week,day){ return S.sessions.some(s=>s.week===week&&s.day===day); }
+function lastCompletedDate(week,day){ const ss=S.sessions.filter(s=>s.week===week&&s.day===day); return ss.length?ss[ss.length-1].date:null; }
+function totalSessions(){ return S.sessions.length; }
+function weekDaysDone(week){ const set={}; S.sessions.forEach(s=>{ if(s.week===week) set[s.day]=1; }); return Object.keys(set).length; }
+function computeStreak(){
+  if(!S.sessions.length) return 0;
+  const days={}; S.sessions.forEach(s=>{ days[s.date.slice(0,10)]=1; });
+  const keys=Object.keys(days).sort();
+  let streak=0; let cur=new Date(); cur.setHours(0,0,0,0);
+  const todayK=fmtDateKey(cur);
+  // allow streak to count if last workout was today or yesterday
+  if(!days[todayK]){ cur.setDate(cur.getDate()-1); if(!days[fmtDateKey(cur)]) return 0; }
+  while(days[fmtDateKey(cur)]){ streak++; cur.setDate(cur.getDate()-1); }
+  return streak;
+}
+function fmtDateKey(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function fmtDate(iso){ const d=new Date(iso); return d.toLocaleDateString(undefined,{month:"short",day:"numeric"}); }
+function fmtDateLong(iso){ const d=new Date(iso); return d.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"}); }
+function setVolume(s){ const w=parseFloat(s.w)||0, r=parseFloat(s.r)||0; return w>0&&r>0?w*r:0; }
+function bestVolumeBefore(exId,beforeWeek){
+  let best=0;
+  for(let w=1;w<beforeWeek;w++){ for(let d=0;d<PLAN.length;d++){ const l=S.logs[lk(w,d,exId)]; if(l) l.sets.forEach(s=>{ const v=setVolume(s); if(v>best)best=v; }); } }
+  return best;
+}
+function lastWeekSummary(exId,day,week){
+  for(let w=week-1;w>=1;w--){ const l=S.logs[lk(w,day,exId)]; if(l){ const done=l.sets.filter(s=>s.w||s.r); if(done.length){ return {week:w, txt:done.map(s=>(s.w?s.w+"×":"")+(s.r||"–")).join(", ")}; } } }
+  return null;
+}
+
+/* ===== feedback: haptics, sound, toast ===== */
+function buzz(ms){ if(S.settings.vibrate&&navigator.vibrate){ try{navigator.vibrate(ms);}catch(e){} } }
+let actx=null;
+function beep(freq,dur,type){
+  if(!S.settings.sound) return;
+  try{ actx=actx||new (window.AudioContext||window.webkitAudioContext)(); if(actx.state==="suspended")actx.resume();
+    const o=actx.createOscillator(),g=actx.createGain(); o.type=type||"sine"; o.frequency.value=freq||660;
+    o.connect(g); g.connect(actx.destination); g.gain.setValueAtTime(0.001,actx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.32,actx.currentTime+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0008,actx.currentTime+(dur||0.18));
+    o.start(); o.stop(actx.currentTime+(dur||0.18)); }catch(e){}
+}
+function chime(){ beep(660,0.14); setTimeout(()=>beep(880,0.18),130); setTimeout(()=>beep(1175,0.26),300); }
+let toastTimer=null;
+function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove("show"),1900); }
+function esc(s){ return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+/* ============================ VIEW / ROUTER ============================ */
+let V = { screen:"home", tab:"train", day:null, exId:null, exList:[], gStep:0, gSteps:[], counter:0 };
+const app = ()=>document.getElementById("app");
+
+function render(){
+  stopRest(true); holdPause(); holdRemain=0;
+  if(V.screen==="home") return renderHome();
+  if(V.screen==="day") return renderDay();
+  if(V.screen==="exercise") return renderExercise();
+  if(V.screen==="guided") return renderGuided();
+  if(V.screen==="history") return renderHistory();
+  if(V.screen==="settings") return renderSettings();
+  renderHome();
+}
+function go(screen,tab){ V.screen=screen; if(tab)V.tab=tab; window.scrollTo(0,0); render(); }
+function openDay(i){ V.day=i; V.screen="day"; window.scrollTo(0,0); render(); }
+function openExercise(exId,day){ V.day=(day==null?V.day:day); V.exList=buildExList(V.day); V.exId=exId; V.counter=0; V.tool=null; holdRemain=0; V.screen="exercise"; window.scrollTo(0,0); render(); }
+function backFromExercise(){ V.screen=(V.day!=null?"day":"home"); window.scrollTo(0,0); render(); }
+function setWeek(w){ S.week=w; save(); render(); }
+
+function ring(pct,color,size){
+  size=size||46; const r=(size-7)/2, c=2*Math.PI*r, off=c*(1-pct);
+  return '<svg class="ring" width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'">'+
+    '<circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="5"/>'+
+    '<circle cx="'+size/2+'" cy="'+size/2+'" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="5" stroke-linecap="round" stroke-dasharray="'+c+'" stroke-dashoffset="'+off+'" transform="rotate(-90 '+size/2+' '+size/2+')"/>'+
+    '<text x="'+size/2+'" y="'+(size/2+4)+'" font-size="12" font-weight="800" fill="'+color+'" text-anchor="middle" font-family="Georgia,serif">'+Math.round(pct*100)+'</text></svg>';
+}
+function tabbar(){
+  const t=(id,ic,lbl)=>'<button class="'+(V.tab===id?"on":"")+'" onclick="go(\''+(id==="train"?"home":id)+'\',\''+id+'\')"><span class="ic">'+ic+'</span>'+lbl+'</button>';
+  return '<div class="tabbar">'+t("train","🏋️","Train")+t("history","📈","History")+t("settings","⚙️","Settings")+'</div>';
+}
+
+function renderHome(){
+  const w=S.week, streak=computeStreak(), done=weekDaysDone(w), total=totalSessions();
+  let weekpills="";
+  for(let i=1;i<=5;i++){ const dl=i===5; weekpills+='<button class="weekpill'+(w===i?" active":"")+(dl?" deload":"")+'" onclick="setWeek('+i+')"><span class="wl">Week</span>'+i+' · '+WEEK_LABELS[i-1]+'</button>'; }
+  const standalone=window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone;
+  const hint=(!S.settings.hideInstall&&!standalone)?
+    '<div id="installhint"><span class="x" onclick="dismissInstall()">×</span><b>Install on your phone:</b> tap the Share icon, then <b>Add to Home Screen</b>. Works fully offline and saves every workout right on this device.</div>':"";
+  let cards="";
+  PLAN.forEach((day,i)=>{
+    const dc=dayDoneCount(w,i), dt=dayTotal(i), pct=dt?dc/dt:0, comp=dayCompleted(w,i);
+    const strip=buildExList(i).slice(0,5).map(e=>'<div class="cell">'+svgFor(e,day.accent)+'</div>').join("");
+    const summ=day.sections.map(s=>'<div style="font-size:11px;color:var(--muted)"><span style="color:'+day.accent+';font-weight:600">'+esc(s.title)+':</span> '+s.items.slice(0,2).map(it=>esc(EX[it.exId].name)).join(", ")+(s.items.length>2?" +"+(s.items.length-2)+" more":"")+'</div>').join("");
+    cards+='<button class="daycard" style="background:'+day.bg+';border:1px solid '+day.color+'" onclick="openDay('+i+')">'+
+      (comp?'<div class="donechk">✓ Done</div>':ring(pct,day.accent))+
+      '<div class="badge" style="background:'+day.color+'">'+day.day+'</div>'+
+      '<div class="dtitle">'+day.label+'</div>'+
+      '<div class="dmeta">'+dt+' exercises · '+dc+'/'+dt+' logged this week</div>'+
+      '<div class="svgstrip">'+strip+'</div>'+
+      '<div style="display:flex;flex-direction:column;gap:2px;margin-top:6px">'+summ+'</div>'+
+      '<div class="open" style="background:'+day.color+'">'+(comp?"Review / Repeat":"Open "+day.day)+' →</div></button>';
+  });
+  app().innerHTML=
+    '<div class="hero"><div class="kicker">David Sundberg · PGA Tour Trainer</div><h1>Golf Strength Program</h1><div class="sub">5-Week Plan · 3 Days / Week</div></div>'+
+    '<div class="weekbar">'+weekpills+'</div>'+
+    '<div class="stats">'+
+      '<div class="stat fire"><div class="v">'+streak+(streak===1?'<small> day</small>':'<small> days</small>')+'</div><div class="l">🔥 Streak</div></div>'+
+      '<div class="stat"><div class="v">'+done+'<small>/3</small></div><div class="l">Week '+w+'</div></div>'+
+      '<div class="stat"><div class="v">'+total+'</div><div class="l">Workouts</div></div>'+
+    '</div>'+
+    hint+
+    '<div class="days">'+cards+'</div>'+
+    tabbar();
+}
+function dismissInstall(){ S.settings.hideInstall=true; save(); render(); }
+
+/* ============================ DAY SCREEN ============================ */
+function renderDay(){
+  const i=V.day, day=PLAN[i], w=S.week;
+  const dc=dayDoneCount(w,i), dt=dayTotal(i), pct=dt?dc/dt:0;
+  let secs="";
+  day.sections.forEach(sec=>{
+    let rows="";
+    sec.items.forEach(item=>{
+      const ex=EX[item.exId], tgt=targetText(item.exId,item,w), done=exDone(w,i,item.exId);
+      rows+='<div class="exrow'+(done?" done":"")+'">'+
+        '<div class="thumb" onclick="openExercise(\''+item.exId+'\','+i+')"><div class="cell">'+svgFor(item.exId,day.accent)+'</div></div>'+
+        '<div class="body" onclick="openExercise(\''+item.exId+'\','+i+')">'+
+          '<div class="nm">'+esc(ex.name)+(ex.tag?' <span style="color:'+day.accent+'">★</span>':"")+'</div>'+
+          (item.note?'<div class="nt" style="color:'+day.accent+'">'+esc(item.note)+'</div>':"")+
+          '<div class="rp">'+esc(tgt)+'</div>'+
+        '</div>'+
+        '<div class="right"><button class="tick" onclick="toggleExDone('+i+',\''+item.exId+'\',event)">✓</button><span class="chev" style="color:'+day.accent+'">›</span></div>'+
+      '</div>';
+    });
+    secs+='<div class="section"><div class="stitle" style="color:'+day.accent+'">'+esc(sec.title)+'</div>'+(sec.subtitle?'<div class="ssub">'+esc(sec.subtitle)+'</div>':"")+rows+'</div>';
+  });
+  app().innerHTML=
+    '<div class="dayhead"><button class="backbtn" onclick="go(\'home\',\'train\')">← All Days</button>'+
+      '<div class="row"><span class="badge" style="background:'+day.color+'">'+day.day+'</span>'+
+      '<h2 style="font-size:19px;color:#d4edda;margin:0">'+day.label+'</h2>'+
+      '<span style="margin-left:auto;font-size:11px;color:var(--muted)">Week '+w+' · '+WEEK_LABELS[w-1]+'</span></div></div>'+
+    '<button class="startbtn" style="background:'+day.color+'" onclick="startGuided('+i+')">▶&nbsp; Start Guided Workout</button>'+
+    '<div class="progresswrap"><div class="progressbar" style="background:'+day.accent+';width:'+(pct*100)+'%"></div></div>'+
+    '<div style="text-align:center;font-size:11px;color:var(--muted);margin-top:6px">'+dc+' of '+dt+' exercises logged this week'+(dayCompleted(w,i)?' · ✅ completed':"")+'</div>'+
+    secs+'<div style="height:46px"></div>';
+}
+function toggleExDone(day,exId,ev){
+  if(ev)ev.stopPropagation();
+  const item=exItem(day,exId), tgt=targetText(exId,item,S.week), l=getLog(S.week,day,exId,tgt);
+  const all=l.sets.every(s=>s.done); l.sets.forEach(s=>s.done=!all);
+  buzz(all?10:26); save();
+  if(!all) completeDayIfDone(day,true); else renderDay();
+}
+function completeDayIfDone(day,celebrate){
+  const w=S.week;
+  if(dayDoneCount(w,day)===dayTotal(day)&&!dayCompleted(w,day)){
+    S.sessions.push({week:w,day:day,date:new Date().toISOString()});
+    save(); if(celebrate){ showCelebrate(day); return true; }
+  }
+  save();
+  if(V.screen==="day") renderDay();
+  return false;
+}
+
+/* ============================ EXERCISE DETAIL ============================ */
+function curKey(){ return lk(S.week,V.day,V.exId); }
+function renderExercise(){
+  const day=PLAN[V.day], accent=day.accent, ex=EX[V.exId], item=exItem(V.day,V.exId), w=S.week;
+  const list=V.exList&&V.exList.length?V.exList:buildExList(V.day);
+  const idx=list.indexOf(V.exId);
+  const prevId=idx>0?list[idx-1]:null, nextId=idx<list.length-1?list[idx+1]:null;
+  const tgt=targetText(V.exId,item,w);
+
+  let chips=list.map(e=>'<button class="chip'+(e===V.exId?" on":"")+(exDone(w,V.day,e)?" done":"")+'" onclick="openExercise(\''+e+'\','+V.day+')">'+esc(EX[e].name)+'</button>').join("");
+
+  let prog="";
+  if(ex.progression){
+    prog='<div class="card prog"><div class="clabel">5-Week Progression</div>'+ex.progression.map(p=>
+      '<div class="progrow'+(p.week===w?" cur":"")+'"><div class="wk" style="color:'+accent+'">Wk '+p.week+'</div><div class="pd">'+esc(p.detail)+(p.week===w?'<span class="nowtag">NOW</span>':"")+'</div></div>').join("")+'</div>';
+  }
+  const steps=ex.howTo.map((s,n)=>'<div class="step"><div class="n">'+(n+1)+'</div><div class="t">'+esc(s)+'</div></div>').join("");
+
+  app().innerHTML=
+    '<div class="topbar"><button class="backbtn" onclick="backFromExercise()">← '+esc(day.label)+'</button>'+
+      '<div class="navbtns"><button class="nb" '+(prevId?'onclick="openExercise(\''+prevId+'\','+V.day+')"':"disabled")+'>‹ Prev</button>'+
+      '<button class="nb primary" style="background:'+accent+'" '+(nextId?'onclick="openExercise(\''+nextId+'\','+V.day+')"':"disabled")+'>Next ›</button></div></div>'+
+    '<div class="chiprail">'+chips+'</div>'+
+    '<div class="exhead-illus"><div class="frame">'+svgFor(V.exId,accent)+'</div></div>'+
+    '<div class="exbody">'+
+      (ex.tag?'<div class="tag">'+esc(ex.tag)+'</div>':"")+
+      '<h2>'+esc(ex.name)+'</h2><div class="muscles">'+esc(ex.muscles)+'</div>'+
+      (item&&item.note?'<div style="font-size:12px;color:'+accent+';font-weight:700;margin:-8px 0 12px">'+esc(item.note)+'</div>':"")+
+      '<div class="card benefit"><div class="clabel">⛳ Golf Benefit</div><div class="ctext">'+esc(ex.golfBenefit)+'</div></div>'+
+      prog+
+      '<div id="loggerWrap"></div>'+
+      '<div id="toolsWrap"></div>'+
+      '<div class="card steps" style="border:1px solid var(--line);background:rgba(255,255,255,0.02)"><div class="clabel">How To Do It</div>'+steps+'</div>'+
+      '<div class="cue"><div class="clabel">Coach Cue</div><div class="ct">'+esc(ex.cue)+'</div></div>'+
+      '<a class="videolink" href="'+esc(ex.videoUrl)+'" target="_blank" rel="noopener noreferrer"><span class="yt">▶ YouTube</span><span class="vl">'+esc(ex.videoLabel)+'</span></a>'+
+      '<div style="display:flex;gap:10px">'+
+        (prevId?'<button class="miniact" onclick="openExercise(\''+prevId+'\','+V.day+')" style="text-align:left"><div style="font-size:10px;color:'+accent+'">‹ Previous</div>'+esc(EX[prevId].name)+'</button>':'<div style="flex:1"></div>')+
+        (nextId?'<button class="miniact" onclick="openExercise(\''+nextId+'\','+V.day+')" style="text-align:right;color:#06210f;background:'+accent+';border-color:transparent;font-weight:700"><div style="font-size:10px;opacity:.8">Next ›</div>'+esc(EX[nextId].name)+'</button>':'<div style="flex:1"></div>')+
+      '</div>'+
+    '</div>';
+  renderLogger();
+  renderTools();
+}
+
+/* ===== Set logger ===== */
+function loggerHTML(){
+  const day=PLAN[V.day], accent=day.accent, item=exItem(V.day,V.exId), w=S.week, tgt=targetText(V.exId,item,w);
+  const l=getLog(w,V.day,V.exId,tgt);
+  const lw=lastWeekSummary(V.exId,V.day,w);
+  const best=bestVolumeBefore(V.exId,w);
+  let rows="";
+  l.sets.forEach((s,i)=>{
+    const vol=setVolume(s), isPB=vol>0&&best>0&&vol>best;
+    rows+='<div class="setrow'+(isPB?" pb":"")+'" id="set-'+i+'"><div class="sidx">'+(i+1)+'</div>'+
+      '<div class="fld"><label>Weight (lb)</label><input id="w-'+i+'" inputmode="decimal" placeholder="–" value="'+esc(s.w)+'" oninput="onSet('+i+',\'w\',this.value)"></div>'+
+      '<div class="fld"><label>Reps / Time</label><input id="r-'+i+'" inputmode="numeric" placeholder="'+esc(parseRepGuess(tgt)||(isTimed(tgt)?parseSeconds(tgt)+"s":""))+'" value="'+esc(s.r)+'" oninput="onSet('+i+',\'r\',this.value)"></div>'+
+      '<button class="setdone'+(s.done?" on":"")+'" id="d-'+i+'" onclick="toggleSet('+i+')">✓</button></div>';
+  });
+  return '<div class="logger"><div class="lhead"><div class="lt" style="color:'+accent+'">📋 Track Your Sets</div><div style="font-size:11px;color:var(--muted)">Week '+w+'</div></div>'+
+    '<div class="target">Target: <b style="color:'+accent+'">'+esc(tgt)+'</b></div>'+
+    (lw?'<div class="lastweek">Last time (Wk '+lw.week+'): <b>'+esc(lw.txt)+'</b> — beat it 💪</div>':"")+
+    rows+
+    '<div class="loggeractions"><button class="miniact add" onclick="addSet()">+ Add set</button><button class="miniact" onclick="removeSet()">– Remove</button></div></div>';
+}
+function renderLogger(){ const el=document.getElementById("loggerWrap"); if(el) el.innerHTML=loggerHTML(); }
+function onSet(i,field,val){ const k=curKey(); if(!S.logs[k])return; S.logs[k].sets[i][field]=val; save(); updatePB(i); }
+function updatePB(i){
+  const k=curKey(), s=S.logs[k].sets[i], best=bestVolumeBefore(V.exId,S.week), vol=setVolume(s);
+  const row=document.getElementById("set-"+i); if(!row)return;
+  if(vol>0&&best>0&&vol>best) row.classList.add("pb"); else row.classList.remove("pb");
+}
+function toggleSet(i){
+  const day=PLAN[V.day], item=exItem(V.day,V.exId), w=S.week, tgt=targetText(V.exId,item,w);
+  const l=getLog(w,V.day,V.exId,tgt), s=l.sets[i];
+  s.done=!s.done;
+  const btn=document.getElementById("d-"+i); if(btn) btn.classList.toggle("on",s.done);
+  if(s.done){
+    buzz(26);
+    const vol=setVolume(s), best=bestVolumeBefore(V.exId,w);
+    if(vol>0&&best>0&&vol>best){ chime(); toast("★ New personal best!"); } else { beep(740,0.12); }
+    const rest=parseRest(item, sectionOf(V.day,V.exId));
+    if(!isTimed(tgt)) startRest(rest, day.accent);
+    if(l.sets.every(x=>x.done)){ if(completeDayIfDone(V.day,true)) return; }
+  } else buzz(10);
+  save();
+}
+function addSet(){ const k=curKey(); S.logs[k].sets.push({w:"",r:"",done:false}); save(); renderLogger(); }
+function removeSet(){ const k=curKey(); if(S.logs[k].sets.length>1){ S.logs[k].sets.pop(); save(); renderLogger(); } }
+function sectionOf(day,exId){ let sec=null; PLAN[day].sections.forEach(s=>s.items.forEach(i=>{ if(i.exId===exId&&!sec)sec=s; })); return sec; }
+
+/* ===== Tools: rep counter + hold timer ===== */
+function renderTools(){
+  const el=document.getElementById("toolsWrap"); if(!el)return;
+  const item=exItem(V.day,V.exId), tgt=targetText(V.exId,item,S.week);
+  if(V.tool==null) V.tool=isTimed(tgt)?"timer":"counter";
+  el.innerHTML='<div class="logger"><div class="segtabs">'+
+    '<button class="'+(V.tool==="counter"?"on":"")+'" onclick="setTool(\'counter\')">👆 Rep Counter</button>'+
+    '<button class="'+(V.tool==="timer"?"on":"")+'" onclick="setTool(\'timer\')">⏱ Hold Timer</button></div><div id="toolBody"></div></div>';
+  renderToolBody();
+}
+function setTool(t){ V.tool=t; renderTools(); }
+function renderToolBody(){ const el=document.getElementById("toolBody"); if(!el)return; el.innerHTML=(V.tool==="counter")?counterHTML():timerHTML(); }
+function counterHTML(){
+  return '<div class="counter"><button class="tapbtn" onclick="tapRep()"><div class="cnum" id="cnum">'+V.counter+'</div><div class="clbl">Tap to count</div></button>'+
+    '<div class="counterctrls"><button onclick="bumpRep(-1)">−</button><button onclick="resetRep()">↺</button><button class="log" onclick="logCounter()">Log → set</button><button onclick="bumpRep(1)">+</button></div></div>';
+}
+function tapRep(){ V.counter++; const c=document.getElementById("cnum"); if(c)c.textContent=V.counter; buzz(14); }
+function bumpRep(n){ V.counter=Math.max(0,V.counter+n); const c=document.getElementById("cnum"); if(c)c.textContent=V.counter; buzz(8); }
+function resetRep(){ V.counter=0; const c=document.getElementById("cnum"); if(c)c.textContent=0; buzz(8); }
+function logCounter(){
+  if(V.counter<=0){ toast("Count some reps first"); return; }
+  const tgt=targetText(V.exId,exItem(V.day,V.exId),S.week), l=getLog(S.week,V.day,V.exId,tgt);
+  let idx=l.sets.findIndex(s=>!s.done); if(idx<0){ l.sets.push({w:"",r:"",done:false}); idx=l.sets.length-1; }
+  l.sets[idx].r=String(V.counter); save(); renderLogger(); toggleSet(idx);
+  V.counter=0; const c=document.getElementById("cnum"); if(c)c.textContent=0; toast("Logged "+l.sets[idx].r+" reps to set "+(idx+1));
+}
+
+let holdInt=null, holdRunning=false, holdRemain=0;
+function fmtClock(s){ s=Math.max(0,Math.ceil(s)); if(s<60)return s+"s"; const m=Math.floor(s/60),ss=s%60; return m+":"+String(ss).padStart(2,"0"); }
+function timerHTML(){
+  const tgt=targetText(V.exId,exItem(V.day,V.exId),S.week), sec=parseSeconds(tgt);
+  if(!holdRunning&&holdRemain===0) holdRemain=sec;
+  return '<div class="timerwrap"><div class="timedisplay" id="holdnum">'+fmtClock(holdRemain)+'</div>'+
+    '<div class="timerctrls"><button onclick="holdAdd(-10)">−10s</button><button class="go" id="holdgo" onclick="holdToggle('+sec+')">'+(holdRunning?"Pause":"Start")+'</button><button onclick="holdReset('+sec+')">Reset</button><button onclick="holdAdd(10)">+10s</button></div>'+
+    '<div style="font-size:11px;color:var(--muted);margin-top:9px;text-align:center">Target hold: '+sec+'s · counts down &amp; beeps when done</div></div>';
+}
+function holdToggle(sec){
+  if(holdRunning){ holdPause(); return; }
+  if(holdRemain<=0) holdRemain=sec;
+  holdRunning=true; const end=Date.now()+holdRemain*1000;
+  const go=document.getElementById("holdgo"); if(go)go.textContent="Pause"; buzz(12);
+  holdInt=setInterval(()=>{
+    const rem=(end-Date.now())/1000, num=document.getElementById("holdnum");
+    if(rem<=0){ holdRunning=false; clearInterval(holdInt); holdInt=null; holdRemain=0;
+      if(num){num.textContent="Done ✓"; num.className="timedisplay go";}
+      chime(); buzz([0,200,90,200]); logHold(sec);
+      const g=document.getElementById("holdgo"); if(g)g.textContent="Start"; return; }
+    holdRemain=rem; if(num){ num.textContent=fmtClock(rem); num.className="timedisplay"+(rem<=5?" warn":""); }
+  },200);
+}
+function holdPause(){ holdRunning=false; if(holdInt){clearInterval(holdInt);holdInt=null;} const go=document.getElementById("holdgo"); if(go)go.textContent="Start"; }
+function holdReset(sec){ holdPause(); holdRemain=sec; const num=document.getElementById("holdnum"); if(num){num.textContent=fmtClock(sec); num.className="timedisplay";} }
+function holdAdd(s){ holdPause(); holdRemain=Math.max(0,Math.round(holdRemain)+s); const num=document.getElementById("holdnum"); if(num)num.textContent=fmtClock(holdRemain); }
+function logHold(sec){
+  const tgt=targetText(V.exId,exItem(V.day,V.exId),S.week), l=getLog(S.week,V.day,V.exId,tgt);
+  let idx=l.sets.findIndex(s=>!s.done); if(idx<0){ l.sets.push({w:"",r:"",done:false}); idx=l.sets.length-1; }
+  l.sets[idx].r=sec+"s"; save(); renderLogger(); toggleSet(idx); toast("Hold logged to set "+(idx+1));
+}
+
+/* ===== Rest timer (floating) ===== */
+let restInt=null;
+function startRest(sec,accent){
+  stopRest(true);
+  let el=document.getElementById("resttimer");
+  if(!el){ el=document.createElement("div"); el.id="resttimer"; document.body.appendChild(el); }
+  el.innerHTML='<div class="rt-num" id="rt-num" style="color:'+(accent||"#52a36e")+'">'+sec+'</div>'+
+    '<div class="rt-mid"><div class="rt-lbl">Rest</div><div class="rt-bar"><div class="rt-fill" id="rt-fill" style="background:'+(accent||"#52a36e")+'"></div></div></div>'+
+    '<div class="rt-btns"><button onclick="restAdd(-15)">−15</button><button onclick="restAdd(15)">+15</button><button onclick="stopRest(false)">Skip</button></div>';
+  el.dataset.end=Date.now()+sec*1000; el.dataset.total=sec; buzz(12);
+  restInt=setInterval(()=>{
+    const e=+el.dataset.end, tot=+el.dataset.total, rem=(e-Date.now())/1000;
+    const num=document.getElementById("rt-num"), fill=document.getElementById("rt-fill");
+    if(rem<=0){ stopRest(false,true); return; }
+    if(num)num.textContent=Math.ceil(rem);
+    if(fill)fill.style.width=Math.min(100,rem/tot*100)+"%";
+  },200);
+}
+function restAdd(s){ const el=document.getElementById("resttimer"); if(!el)return; el.dataset.end=+el.dataset.end+s*1000; const rem=(+el.dataset.end-Date.now())/1000; if(rem>+el.dataset.total) el.dataset.total=rem; buzz(8); }
+function stopRest(silent,finished){ if(restInt){clearInterval(restInt);restInt=null;} const el=document.getElementById("resttimer"); if(el)el.remove(); if(finished){ chime(); buzz([0,180,90,180]); toast("Rest over — go! 💪"); } }
+
+/* ============================ GUIDED WORKOUT ============================ */
+function startGuided(day){
+  V.day=day; V.exList=buildExList(day);
+  const steps=[]; PLAN[day].sections.forEach(sec=>sec.items.forEach(it=>steps.push({sec:sec,item:it})));
+  V.gSteps=steps; V.gStep=0; V.screen="guided"; window.scrollTo(0,0); render();
+}
+function renderGuided(){
+  const day=PLAN[V.day], accent=day.accent, total=V.gSteps.length;
+  if(V.gStep>=total) return finishGuided();
+  const step=V.gSteps[V.gStep], item=step.item;
+  V.exId=item.exId; V.counter=0; V.tool=null; holdRemain=0;
+  const ex=EX[item.exId], tgt=targetText(item.exId,item,S.week), pct=V.gStep/total;
+  app().innerHTML=
+    '<div class="guided-top"><button class="backbtn" onclick="exitGuided()">✕ Exit</button>'+
+      '<div style="flex:1"><div class="progresswrap" style="margin:0"><div class="progressbar" style="background:'+accent+';width:'+(pct*100)+'%"></div></div></div>'+
+      '<div class="gcount">'+(V.gStep+1)+' / '+total+'</div></div>'+
+    '<div class="gsec" style="color:'+accent+'">'+esc(step.sec.title)+(item.note?' · '+esc(item.note):"")+'</div>'+
+    '<div class="gname">'+esc(ex.name)+'</div>'+
+    '<div class="gtarget">'+esc(tgt)+'</div>'+
+    '<div class="gillus" onclick="openExercise(\''+item.exId+'\','+V.day+')"><div class="frame">'+svgFor(item.exId,accent)+'</div></div>'+
+    '<div style="text-align:center;font-size:12px;color:var(--txt2);margin:0 18px 10px;font-style:italic;font-family:var(--serif)">'+esc(ex.cue)+'</div>'+
+    '<div style="text-align:center;margin-bottom:6px"><span style="font-size:11px;color:'+accent+'" onclick="openExercise(\''+item.exId+'\','+V.day+')">⛳ full details, video &amp; how-to ›</span></div>'+
+    '<div style="padding:0 16px"><div id="loggerWrap"></div><div id="toolsWrap"></div></div>'+
+    '<div style="height:100px"></div>'+
+    '<div class="gnav">'+
+      '<button onclick="gPrev()"'+(V.gStep===0?' disabled':"")+'>‹</button>'+
+      (V.gStep<total-1?'<button class="primary" onclick="gNext()">Next ›</button>':'<button class="finish" onclick="finishGuided()">Finish Workout 🏁</button>')+
+    '</div>';
+  renderLogger(); renderTools();
+}
+function gNext(){ stopRest(true); if(V.gStep<V.gSteps.length-1){ V.gStep++; window.scrollTo(0,0); renderGuided(); } else finishGuided(); }
+function gPrev(){ stopRest(true); if(V.gStep>0){ V.gStep--; window.scrollTo(0,0); renderGuided(); } }
+function exitGuided(){ stopRest(true); V.screen="day"; render(); }
+function finishGuided(){
+  stopRest(true); holdPause();
+  const w=S.week;
+  buildExList(V.day).forEach(e=>{ const item=exItem(V.day,e), tgt=targetText(e,item,w), l=getLog(w,V.day,e,tgt); if(!l.sets.some(s=>s.done)) l.sets.forEach(s=>s.done=true); });
+  if(!dayCompleted(w,V.day)) S.sessions.push({week:w,day:V.day,date:new Date().toISOString()});
+  save(); showCelebrate(V.day);
+}
+
+/* ============================ CELEBRATE + CONFETTI ============================ */
+function showCelebrate(day){
+  const streak=computeStreak(), wd=weekDaysDone(S.week);
+  const el=document.createElement("div"); el.id="celebrate";
+  const msg = wd>=3 ? "That's all 3 days this week — week "+S.week+" in the books!" : "Logged and saved on this device. Keep stacking days.";
+  el.innerHTML='<div class="big">🏌️</div><h2>'+esc(PLAN[day].label)+' Complete!</h2><p>'+esc(msg)+'</p>'+
+    '<div class="cstats"><div class="cstat"><div class="v">'+streak+'</div><div class="l">🔥 Day streak</div></div>'+
+    '<div class="cstat"><div class="v">'+wd+'/3</div><div class="l">Week '+S.week+'</div></div>'+
+    '<div class="cstat"><div class="v">'+totalSessions()+'</div><div class="l">Total</div></div></div>'+
+    '<button onclick="closeCelebrate()">Let’s go 💪</button>';
+  document.body.appendChild(el); fireConfetti(); chime(); buzz([0,120,60,120,60,220]);
+}
+function closeCelebrate(){ const el=document.getElementById("celebrate"); if(el)el.remove(); V.screen="home"; V.tab="train"; window.scrollTo(0,0); render(); }
+function fireConfetti(){
+  const cv=document.getElementById("confetti"); cv.classList.remove("hidden");
+  const ctx=cv.getContext("2d"); cv.width=window.innerWidth; cv.height=window.innerHeight;
+  const colors=["#52a36e","#d4a336","#5a9fd4","#d4905a","#d4edda"]; const parts=[];
+  for(let i=0;i<150;i++) parts.push({x:Math.random()*cv.width,y:-20-Math.random()*cv.height*0.5,r:4+Math.random()*6,c:colors[i%colors.length],vx:(Math.random()-0.5)*3.4,vy:2+Math.random()*4.5,rot:Math.random()*6,vr:(Math.random()-0.5)*0.32});
+  let frames=0;
+  (function tick(){ frames++; ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.vy+=0.06; p.rot+=p.vr; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot); ctx.fillStyle=p.c; ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*0.6); ctx.restore(); });
+    if(frames<170) requestAnimationFrame(tick); else cv.classList.add("hidden");
+  })();
+}
+
+/* ============================ HISTORY ============================ */
+function renderHistory(){
+  const ss=S.sessions.slice().sort((a,b)=>b.date.localeCompare(a.date));
+  let grid='<div style="display:flex;gap:6px;margin-bottom:16px">';
+  for(let wk=1;wk<=5;wk++){ const dn=weekDaysDone(wk); grid+='<div style="flex:1;text-align:center;background:rgba(255,255,255,0.04);border:1px solid var(--line);border-radius:9px;padding:9px 2px"><div style="font-size:17px;font-weight:800;color:'+(dn>=3?"#52a36e":"#d4edda")+';font-family:Georgia">'+dn+'<span style="font-size:11px;color:var(--muted)">/3</span></div><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px">Wk '+wk+'</div></div>'; }
+  grid+='</div>';
+  let body;
+  if(!ss.length) body='<div class="empty">No workouts logged yet.<br>Finish a day and it shows up here —<br>track your progress week after week.</div>';
+  else body=ss.map(s=>{ const day=PLAN[s.day], dc=buildExList(s.day).filter(e=>exDone(s.week,s.day,e)).length;
+    return '<button class="histcard" onclick="openDayWeek('+s.week+','+s.day+')" style="border-left:3px solid '+day.accent+'"><div class="ht"><div class="hname">'+esc(day.label)+'</div><div class="hdate">'+esc(fmtDateLong(s.date))+'</div></div><div class="hmeta">Week '+s.week+' · '+esc(day.day)+' · '+dc+' exercises logged</div></button>'; }).join("");
+  app().innerHTML='<div class="hero"><div class="kicker">Your Progress</div><h1>Workout History</h1><div class="sub">'+totalSessions()+' sessions · 🔥 '+computeStreak()+' day streak</div></div><div class="pad">'+grid+body+'</div>'+tabbar();
+}
+function openDayWeek(w,d){ S.week=w; save(); openDay(d); }
+
+/* ============================ SETTINGS ============================ */
+function renderSettings(){
+  const tog=(label,sub,val,fn)=>'<button class="setbtn" onclick="'+fn+'"><div>'+label+'<div class="sv">'+sub+'</div></div><div class="toggle'+(val?" on":"")+'"><div class="knob"></div></div></button>';
+  app().innerHTML='<div class="hero"><div class="kicker">Preferences</div><h1>Settings</h1><div class="sub">Everything is stored only on this device</div></div><div class="pad">'+
+    tog("Vibration / haptics","Buzz on taps, sets &amp; timers",S.settings.vibrate,"toggleSetting('vibrate')")+
+    tog("Sound cues","Beeps for reps &amp; rest timer",S.settings.sound,"toggleSetting('sound')")+
+    '<button class="setbtn" onclick="exportData()"><div>Export / back up data<div class="sv">Download a JSON file of all your logs</div></div><div class="sv">⬇</div></button>'+
+    '<label class="setbtn" style="cursor:pointer"><div>Import data<div class="sv">Restore from a backup file</div></div><input type="file" accept="application/json" style="display:none" onchange="importData(this)"><div class="sv">⬆</div></label>'+
+    '<button class="setbtn" onclick="resetWeekData()"><div>Reset current week (Wk '+S.week+')<div class="sv">Clears logs &amp; completion for this week only</div></div><div class="sv">↺</div></button>'+
+    '<button class="setbtn" style="border-color:#5a2020" onclick="resetAll()"><div style="color:#ff9a9a">Erase everything<div class="sv" style="color:#c98">Delete all logs, history &amp; settings</div></div><div class="sv">🗑</div></button>'+
+    '<div style="font-size:11px;color:var(--muted2);text-align:center;margin-top:20px;line-height:1.7">Golf Strength Program · 5-Week Plan · 3 Days/Week<br>Program by David Sundberg, PGA Tour Trainer<br>Add to Home Screen to use fully offline.</div>'+
+    '</div>'+tabbar();
+}
+function toggleSetting(k){ S.settings[k]=!S.settings[k]; save(); if(k==="sound"&&S.settings.sound) beep(680,0.1); if(k==="vibrate"&&S.settings.vibrate) buzz(20); renderSettings(); }
+function exportData(){ try{ const blob=new Blob([JSON.stringify(S,null,2)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="golf-program-backup-"+fmtDateKey(new Date())+".json"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),1500); toast("Backup downloaded"); }catch(e){ toast("Export failed"); } }
+function importData(input){ const f=input.files&&input.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{ try{ const d=JSON.parse(r.result); S=Object.assign(defaultState(),d); save(); toast("Data imported ✓"); go("home","train"); }catch(e){ toast("Invalid backup file"); } }; r.readAsText(f); }
+function resetWeekData(){ if(!confirm("Clear all logs & completion for Week "+S.week+"?"))return; const w=S.week; Object.keys(S.logs).forEach(k=>{ if(k.indexOf(w+"|")===0) delete S.logs[k]; }); S.sessions=S.sessions.filter(s=>s.week!==w); save(); toast("Week "+w+" reset"); renderSettings(); }
+function resetAll(){ if(!confirm("Erase ALL data? This cannot be undone."))return; S=defaultState(); save(); toast("All data erased"); go("home","train"); }
+
+/* ============================ INIT ============================ */
+window.addEventListener("resize",()=>{ const cv=document.getElementById("confetti"); if(cv&&!cv.classList.contains("hidden")){ cv.width=window.innerWidth; cv.height=window.innerHeight; } });
+render();
+</script>
+</body>
+</html>
